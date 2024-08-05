@@ -47,8 +47,8 @@ export async function getRecipes({
 		queryParams.push(parseInt(skip, 0));
 	}
 
-	const [rows] = await pool.query(query, queryParams);
-	return { rows };
+	const [recipes] = await pool.query(query, queryParams);
+	return { recipes };
 }
 
 export async function getTotal() {
