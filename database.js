@@ -12,28 +12,36 @@ const pool = mysql
 	})
 	.promise();
 
-export async function getRecipes({ searchQuery, limit, skip, sortBy, order }) {
+export async function getRecipes({
+	searchQuery,
+	limit = 30,
+	skip = 0,
+	sortBy = "id",
+	order = "asc",
+}) {
 	let query = "SELECT * FROM recipes";
 	let queryParams = [];
-
-	// queryParams.push(searchQuery);
 
 	if (searchQuery) {
 		query += " WHERE name LIKE ?";
 		queryParams.push(`%${searchQuery}%`);
 	}
 
-	if (limit) {
-		query += " LIMIT ?";
-		queryParams.push(limit, 30);
-	}
-	if (skip) {
-		query += " OFFSET ?";
-		queryParams.push(skip, 0);
+	if (sortBy) {
+		query += ` ORDER BY ${sortBy}`;
+		if (order) {
+			query += ` ${order}`;
+		}
 	}
 
-	if (sortBy && order) {
-		query += ` ORDER BY ${sortBy} ${order}`;
+	if (limit) {
+		query += ` LIMIT ?`;
+		queryParams.push(parseInt(limit, 30));
+	}
+
+	if (skip) {
+		query += ` OFFSET ?`;
+		queryParams.push(parseInt(skip, 0));
 	}
 
 	const [rows] = await pool.query(query, queryParams);
