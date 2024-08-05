@@ -10,16 +10,16 @@ const port = 3000;
 
 app.get("/recipes", async (req, res) => {
 	const searchQuery = req.query.q || "";
-	const limit = parseInt(req.query.limit) || 30;
-	const skip = parseInt(req.query.skip) || 0;
+	const limit = req.query.limit || 30;
+	const skip = req.query.skip || 0;
 	const sortBy = req.query.sortBy || "";
 	const order = req.query.order || "";
 
 	try {
 		const recipes = await getRecipes({
 			searchQuery,
-			limit,
-			skip,
+			limit: Number(limit),
+			skip: Number(skip),
 			sortBy,
 			order,
 		});
