@@ -55,5 +55,3 @@ export async function getTotal() {
 	const [[{ total }]] = await pool.query(countQuery);
 	return total;
 }
-
-console.log(await getTotal());
