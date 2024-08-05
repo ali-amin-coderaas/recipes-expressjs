@@ -37,12 +37,12 @@ export async function getRecipes({
 
 	if (limit) {
 		query += ` LIMIT ?`;
-		queryParams.push(parseInt(limit, 30));
+		queryParams.push(parseInt(limit, 10));
 	}
 
 	if (skip) {
 		query += ` OFFSET ?`;
-		queryParams.push(parseInt(skip, 0));
+		queryParams.push(parseInt(skip, 10));
 	}
 
 	const [recipes] = await pool.query(query, queryParams);
