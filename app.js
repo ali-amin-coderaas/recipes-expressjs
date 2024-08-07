@@ -1,12 +1,44 @@
+import bcrypt from "bcrypt";
 import cors from "cors";
 import express from "express";
-import { getRecipes, getTotal } from "./database.js";
+import { getRecipes, getTotal, registerUser } from "./src/configs/database.js";
 
 const app = express();
 
+app.use(express.json());
 app.use(cors());
 
-const port = 3000;
+const port = 8080;
+
+app.post("/register", async (req, res) => {
+	const first_name = req.body.first_name;
+	const last_name = req.body.last_name;
+	const email = req.body.email;
+	const password = req.body.password;
+
+	if (!first_name || !last_name || !email || !password) {
+		return res.status(400).json({ error: "All fields are required" });
+	}
+
+	await bcrypt.hash(password, 10, async (err, hash) => {
+		if (err) return res.json({ Error: "Error hashing password" });
+
+		try {
+			const userId = await registerUser({
+				first_name,
+				last_name,
+				email,
+				password: hash,
+			});
+			return res.status(201).json({ id: userId });
+		} catch (error) {
+			res
+				.status(500)
+				.json({ error: "An error occured while registering user" });
+			console.log(error);
+		}
+	});
+});
 
 app.get("/recipes", async (req, res) => {
 	const searchQuery = req.query.q || "";

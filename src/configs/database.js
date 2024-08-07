@@ -14,6 +14,14 @@ const pool = mysql.createPool({
 	queueLimit: 0,
 });
 
+export async function registerUser({ first_name, last_name, email, password }) {
+	let query = `INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)`;
+	let queryParams = [first_name, last_name, email, password];
+
+	const [result] = await pool.query(query, queryParams);
+	return result.insertId;
+}
+
 export async function getRecipes({
 	searchQuery,
 	limit = 30,
