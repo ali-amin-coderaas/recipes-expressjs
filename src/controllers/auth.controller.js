@@ -32,6 +32,11 @@ const login = async (req, res) => {
 			}
 		);
 
+		res.cookie("jwtToken", token, {
+			sameSite: "Lax",
+			secure: false,
+		});
+
 		return res.status(200).json({ token });
 	} catch (error) {
 		console.error(error);

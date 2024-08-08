@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/recipes", recipesRouter);
+app.use("/", recipesRouter);
 
 app.use("/", userRouter);
 
