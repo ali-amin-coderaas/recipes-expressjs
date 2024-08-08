@@ -1,4 +1,4 @@
-import { getRecipes, getTotal } from "../configs/database.js";
+import { getRecipes, getTotal } from "../services/recipes.service.js";
 
 const getAll = async (req, res) => {
 	const searchQuery = req.query.q || "";
