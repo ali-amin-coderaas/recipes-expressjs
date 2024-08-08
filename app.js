@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import authenticateToken from "./src/middlewares/auth.middleware.js";
 import userRouter from "./src/routes/auth.route.js";
 import recipesRouter from "./src/routes/recipes.route.js";
 
@@ -13,7 +14,7 @@ app.use("/recipes", recipesRouter);
 
 app.use("/register", userRouter);
 
-app.use("/login", userRouter);
+app.use("/login", authenticateToken, userRouter);
 
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
