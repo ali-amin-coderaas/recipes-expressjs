@@ -1,8 +1,10 @@
 import cors from "cors";
+import dotenv from "dotenv";
 import express from "express";
-import authenticateToken from "./src/middlewares/auth.middleware.js";
 import userRouter from "./src/routes/auth.route.js";
 import recipesRouter from "./src/routes/recipes.route.js";
+
+dotenv.config();
 
 const port = 8080;
 const app = express();
@@ -12,9 +14,7 @@ app.use(cors());
 
 app.use("/recipes", recipesRouter);
 
-app.use("/register", userRouter);
-
-app.use("/login", authenticateToken, userRouter);
+app.use("/", userRouter);
 
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);

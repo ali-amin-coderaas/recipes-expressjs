@@ -19,7 +19,7 @@ const getAll = async (req, res) => {
 		res.json({ recipes, total, skip, limit });
 	} catch (error) {
 		res.status(500).json({ error: "An error occured while fetching recipes" });
-		console.log(error);
+		console.error(error);
 	}
 };
 

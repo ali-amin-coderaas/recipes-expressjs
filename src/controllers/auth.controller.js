@@ -1,5 +1,8 @@
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { findUserByEmail, validatePassword } from "../services/user.service.js";
+
+dotenv.config();
 
 const login = async (req, res) => {
 	const email = req.body.email;
@@ -10,7 +13,7 @@ const login = async (req, res) => {
 	}
 
 	try {
-		const user = findUserByEmail(email);
+		const user = await findUserByEmail(email);
 
 		if (!user) {
 			return res.status(401).json({ error: "Invalid email or password" });
