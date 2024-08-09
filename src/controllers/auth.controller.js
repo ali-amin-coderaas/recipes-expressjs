@@ -32,7 +32,7 @@ const login = async (req, res) => {
 			}
 		);
 
-		return res.status(200).json({ token });
+		return res.status(200).json({ token: token });
 	} catch (error) {
 		console.error(error);
 		return res

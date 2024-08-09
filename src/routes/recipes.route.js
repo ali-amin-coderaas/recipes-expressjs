@@ -4,6 +4,6 @@ import authenticateToken from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-router.get("/recipes", authenticateToken, recipesController.getAll);
+router.get("/", authenticateToken, recipesController.getAll);
 
 export default router;

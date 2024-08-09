@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { registerUser } from "../services/user.service.js";
+import { findUserByEmail, registerUser } from "../services/user.service.js";
 
 const register = async (req, res) => {
 	const first_name = req.body.first_name;
@@ -9,6 +9,11 @@ const register = async (req, res) => {
 
 	if (!first_name || !last_name || !email || !password) {
 		return res.status(400).json({ error: "All fields are required" });
+	}
+
+	const existingUser = await findUserByEmail(email);
+	if (existingUser) {
+		return res.status(400).json({ error: "Email already in use!" });
 	}
 
 	await bcrypt.hash(password, 10, async (err, hash) => {
