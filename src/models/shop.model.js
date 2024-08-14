@@ -29,6 +29,6 @@ export const Shop = {
 	},
 	delete: async (id) => {
 		const query = "DELETE FROM shops WHERE id = ?";
-		await pool.query(query, [id]);
+		return await pool.query(query, [id]);
 	},
 };
