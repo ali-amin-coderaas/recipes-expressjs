@@ -17,6 +17,30 @@ CREATE TABLE users(
     password VARCHAR(255) NOT NULL
 )
 
+CREATE TABLE account (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    isActive BOOLEAN,
+    createdAt DATETIME,
+    updatedAt DATETIME
+);
+
+CREATE TABLE shop (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    accountId INT,
+    name VARCHAR(255),
+    businessName VARCHAR(255),
+    email VARCHAR(255),
+    businessAddress VARCHAR(255),
+    internalAddress VARCHAR(255),
+    taxInformation VARCHAR(255),
+    isActive BOOLEAN,
+    createdAt DATETIME,
+    updatedAt DATETIME,
+    FOREIGN KEY (accountId) REFERENCES account(id)
+);
+
+
 
 -- *mock data
 
