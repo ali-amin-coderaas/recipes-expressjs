@@ -1,6 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import authenticateToken from "./src/middlewares/auth.middleware.js";
 import accountRouter from "./src/routes/account.route.js";
 import userRouter from "./src/routes/auth.route.js";
 import recipesRouter from "./src/routes/recipes.route.js";
@@ -18,9 +19,9 @@ app.use("/", recipesRouter);
 
 app.use("/", userRouter);
 
-app.use("/", accountRouter);
+app.use("/", authenticateToken, accountRouter);
 
-app.use("/", shopRouter);
+app.use("/", authenticateToken, shopRouter);
 
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
