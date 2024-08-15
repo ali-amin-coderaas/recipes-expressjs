@@ -18,12 +18,15 @@ export const Shop = {
 		return result[0];
 	},
 	update: async (shopId, accountId, fieldsToUpdate) => {
+		if (!fieldsToUpdate || Object.keys(fieldsToUpdate).length === 0) {
+			throw new Error("No fields to update");
+		}
 		const setClause = Object.keys(fieldsToUpdate)
 			.map((key) => `${key} = ?`)
 			.join(", ");
 		const query = `UPDATE shops SET ${setClause}, updatedAt = NOW() WHERE id = ? AND accountId = ?`;
-		const queryParams = [...Object.values(fieldsToUpdate), shopId];
-		const [result] = await pool.query(query, accountId, queryParams);
+		const queryParams = [...Object.values(fieldsToUpdate), shopId, accountId];
+		const [result] = await pool.query(query, queryParams);
 		return result;
 	},
 	delete: async (shopId, accountId) => {

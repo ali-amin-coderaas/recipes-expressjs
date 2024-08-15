@@ -53,18 +53,25 @@ const getShops = async (req, res) => {
 };
 
 const updateShopById = async (req, res) => {
-	const { accountId, shopId } = req.params;
-	const { fieldsToUpdate } = req.body;
+	const { shopId, accountId } = req.params;
+	const fieldsToUpdate =  req.body;
+
 	try {
-		const result = await updateShop(shopId, accountId, fieldsToUpdate);
-		if (result.affectedRows === 0) {
+		if (!fieldsToUpdate || Object.keys(fieldsToUpdate).length === 0) {
+			return res.status(400).json({ error: "No fields provided for update." });
+		}
+
+		const updatedShop = await updateShop(shopId, accountId, fieldsToUpdate);
+
+		if (!updatedShop) {
 			return res.status(404).json({ error: "Shop not found" });
 		}
-		return res.status(200).json(result);
+
+		return res.status(200).json({ message: "Shop updated successfully" });
 	} catch (error) {
 		res
 			.status(500)
-			.json({ error: "An error occurred while fetching the shops" });
+			.json({ error: "An error occurred while updating the shop" });
 		console.error(error);
 	}
 };
