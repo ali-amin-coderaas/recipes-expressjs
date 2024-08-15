@@ -1,5 +1,4 @@
-import { pool } from "../configs/database.js";
-
+import pool from "../configs/database.js";
 export const Shop = {
 	create: async (accountId, name, businessName, email) => {
 		const query =
@@ -8,27 +7,27 @@ export const Shop = {
 		const [result] = await pool.query(query, queryParams);
 		return result.insertId;
 	},
-	getAll: async () => {
-		const query = "SELECT * FROM shops";
-		const [result] = await pool.query(query);
+	getAll: async (accountId) => {
+		const query = "SELECT * FROM shops WHERE accountId = ?";
+		const [result] = await pool.query(query, [accountId]);
 		return result;
 	},
-	getById: async (id) => {
-		const query = "SELECT * FROM shops WHERE id = ?";
-		const [result] = await pool.query(query, [id]);
+	getById: async (shopId, accountId) => {
+		const query = "SELECT * FROM shops WHERE id = ? AND accountId = ?";
+		const [result] = await pool.query(query, [shopId, accountId]);
 		return result[0];
 	},
-	update: async (id, fieldsToUpdate) => {
+	update: async (shopId, accountId, fieldsToUpdate) => {
 		const setClause = Object.keys(fieldsToUpdate)
 			.map((key) => `${key} = ?`)
 			.join(", ");
-		const query = `UPDATE shops SET ${setClause}, updatedAt = NOW() WHERE id = ?`;
-		const queryParams = [...Object.values(fieldsToUpdate), id];
-		const [result] = await pool.query(query, queryParams);
+		const query = `UPDATE shops SET ${setClause}, updatedAt = NOW() WHERE id = ? AND accountId = ?`;
+		const queryParams = [...Object.values(fieldsToUpdate), shopId];
+		const [result] = await pool.query(query, accountId, queryParams);
 		return result;
 	},
-	delete: async (id) => {
-		const query = "DELETE FROM shops WHERE id = ?";
-		return await pool.query(query, [id]);
+	delete: async (shopId, accountId) => {
+		const query = "DELETE FROM shops WHERE id = ? AND accountId = ?";
+		return await pool.query(query, [shopId, accountId]);
 	},
 };

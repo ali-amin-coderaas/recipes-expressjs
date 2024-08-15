@@ -17,7 +17,7 @@ export const Account = {
 		const query = "SELECT * FROM accounts WHERE id = ?";
 		const queryParams = [id];
 		const [result] = await pool.query(query, queryParams);
-		return result;
+		return result[0];
 	},
 	update: async (id, fieldsToUpdate) => {
 		const setClause = Object.keys(fieldsToUpdate)
