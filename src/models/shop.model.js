@@ -29,8 +29,10 @@ export const Shop = {
 		const [result] = await pool.query(query, queryParams);
 		return result;
 	},
-	delete: async (shopId, accountId) => {
-		const query = "DELETE FROM shops WHERE id = ? AND accountId = ?";
-		return await pool.query(query, [shopId, accountId]);
+	delete: async (shopId, accountId, isActive) => {
+		const query =
+			"UPDATE shops SET isActive = ? WHERE id = ? AND accountId = ?";
+		const queryParams = [isActive, shopId, accountId];
+		return await pool.query(query, queryParams);
 	},
 };

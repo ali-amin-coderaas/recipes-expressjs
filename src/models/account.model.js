@@ -28,8 +28,9 @@ export const Account = {
 		const [result] = await pool.query(query, queryParams);
 		return result;
 	},
-	delete: async (id) => {
-		const query = "DELETE FROM accounts WHERE id = ?";
-		return await pool.query(query, [id]);
+	delete: async (id, isActive) => {
+		const query = "UPDATE accounts SET isActive = ? WHERE id = ?";
+		const queryParams = [isActive, id];
+		return await pool.query(query, queryParams);
 	},
 };
