@@ -9,10 +9,25 @@ export const Account = {
 		return result.insertId;
 	},
 	getAll: async () => {
-		const query = "SELECT * FROM accounts";
+		const query = `
+			SELECT 
+				a.*, 
+				COUNT(s.id) AS shop_count 
+			FROM 
+				accounts a
+			LEFT JOIN 
+				shops s 
+			ON 
+				a.id = s.accountId AND s.isActive = true
+			WHERE 
+				a.isActive = true
+			GROUP BY 
+				a.id
+		`;
 		const [result] = await pool.query(query);
 		return result;
 	},
+
 	getById: async (id) => {
 		const query = "SELECT * FROM accounts WHERE id = ?";
 		const queryParams = [id];

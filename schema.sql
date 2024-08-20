@@ -20,7 +20,7 @@ CREATE TABLE
         updatedAt DATETIME
     )
 CREATE TABLE
-    account (
+    accounts (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255),
         isActive BOOLEAN,
@@ -29,7 +29,7 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    shop (
+    shops (
         id INT AUTO_INCREMENT PRIMARY KEY,
         accountId INT,
         name VARCHAR(255),
