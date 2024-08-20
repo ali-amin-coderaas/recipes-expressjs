@@ -12,7 +12,7 @@ export const Account = {
 		const query = `
 			SELECT 
 				a.*, 
-				COUNT(s.id) AS shop_count 
+				COUNT(s.id) AS shopCount 
 			FROM 
 				accounts a
 			LEFT JOIN 
