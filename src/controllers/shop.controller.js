@@ -54,7 +54,7 @@ const getShops = async (req, res) => {
 
 const updateShopById = async (req, res) => {
 	const { shopId, accountId } = req.params;
-	const fieldsToUpdate =  req.body;
+	const fieldsToUpdate = req.body;
 
 	try {
 		if (!fieldsToUpdate || Object.keys(fieldsToUpdate).length === 0) {
@@ -78,8 +78,10 @@ const updateShopById = async (req, res) => {
 
 const deleteShopById = async (req, res) => {
 	const { accountId, shopId } = req.params;
+	const isActive = 0;
+
 	try {
-		const result = await deleteShop(shopId, accountId);
+		const result = await deleteShop(shopId, accountId, isActive);
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ error: "Shop not found" });
 		}

@@ -14,6 +14,6 @@ export async function getAllAccounts() {
 export async function getById(id) {
 	return await Account.getById(id);
 }
-export async function deleteAccount(id) {
-	return await Account.delete(id);
+export async function deleteAccount(id, isActive) {
+	return await Account.delete(id, isActive);
 }

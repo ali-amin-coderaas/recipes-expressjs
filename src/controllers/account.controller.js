@@ -75,8 +75,9 @@ const updateAccountById = async (req, res) => {
 
 const deleteAccountById = async (req, res) => {
 	const { id } = req.params;
+	const isActive = 0;
 	try {
-		const result = await deleteAccount(id);
+		const result = await deleteAccount(id, isActive);
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ error: "Account not found" });
 		}
