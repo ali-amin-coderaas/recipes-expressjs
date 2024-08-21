@@ -1,7 +1,7 @@
 import { Account } from "../models/account.model.js";
 
-export async function addAccount(name, isActive, createdAt, updatedAt) {
-	return await Account.create(name, isActive, createdAt, updatedAt);
+export async function addAccount(name) {
+	return await Account.create(name);
 }
 
 export async function updateAccount(id, fieldsToUpdate) {

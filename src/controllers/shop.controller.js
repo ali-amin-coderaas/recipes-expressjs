@@ -78,7 +78,7 @@ const updateShopById = async (req, res) => {
 
 const deleteShopById = async (req, res) => {
 	const { accountId, shopId } = req.params;
-	const isActive = 0;
+	const isActive = false;
 
 	try {
 		const result = await deleteShop(shopId, accountId, isActive);

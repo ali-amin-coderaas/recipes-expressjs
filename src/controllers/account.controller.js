@@ -7,14 +7,9 @@ import {
 } from "../services/account.service.js";
 
 const createAccount = async (req, res) => {
-	const { name, isActive } = req.body;
+	const { name } = req.body;
 	try {
-		const newAccountId = await addAccount(
-			name,
-			isActive,
-			new Date(),
-			new Date()
-		);
+		const newAccountId = await addAccount(name);
 		return res.status(201).json({ id: newAccountId });
 	} catch (error) {
 		res
@@ -75,7 +70,7 @@ const updateAccountById = async (req, res) => {
 
 const deleteAccountById = async (req, res) => {
 	const { id } = req.params;
-	const isActive = 0;
+	const isActive = false;
 	try {
 		const result = await deleteAccount(id, isActive);
 		if (result.affectedRows === 0) {

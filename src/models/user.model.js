@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import pool from "../configs/database.js";
-import { findUserByEmail } from "../services/user.service.js";
 
 const User = {
 	create: async ({ first_name, last_name, email, password }) => {

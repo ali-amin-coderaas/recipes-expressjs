@@ -1,10 +1,10 @@
 import pool from "../configs/database.js";
 
 export const Account = {
-	create: async (name, isActive, createdAt, updatedAt) => {
+	create: async (name) => {
 		const query =
-			"INSERT INTO accounts (name, isActive, createdAt, updatedAt) VALUES (?, ?, NOW(), NOW())";
-		const queryParams = [name, isActive, createdAt, updatedAt];
+			"INSERT INTO accounts (name, createdAt, updatedAt) VALUES (?, NOW(), NOW())";
+		const queryParams = [name];
 		const [result] = await pool.query(query, queryParams);
 		return result.insertId;
 	},
