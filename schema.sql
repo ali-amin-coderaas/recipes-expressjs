@@ -22,26 +22,26 @@ CREATE TABLE
 CREATE TABLE
     accounts (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255),
-        isActive BOOLEAN,
-        createdAt DATETIME,
-        updatedAt DATETIME
+        name VARCHAR(255) NOT NULL,
+        isActive BOOLEAN NOT NULL DEFAULT TRUE,
+        createdAt DATETIME NOT NULL,
+        updatedAt DATETIME NOT NULL
     );
 
 CREATE TABLE
     shops (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        accountId INT,
-        name VARCHAR(255),
-        businessName VARCHAR(255),
-        email VARCHAR(255),
+        accountId INT NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        businessName VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
         businessAddress VARCHAR(255),
         internalAddress VARCHAR(255),
         taxInformation VARCHAR(255),
-        isActive BOOLEAN,
-        createdAt DATETIME,
-        updatedAt DATETIME,
-        FOREIGN KEY (accountId) REFERENCES account (id)
+        isActive BOOLEAN NOT NULL DEFAULT TRUE,
+        createdAt DATETIME NOT NULL,
+        updatedAt DATETIME NOT NULL,
+        FOREIGN KEY (accountId) REFERENCES accounts (id)
     );
 
 -- *mock data

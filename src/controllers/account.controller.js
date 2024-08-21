@@ -22,10 +22,6 @@ const createAccount = async (req, res) => {
 const getAccounts = async (req, res) => {
 	try {
 		const accounts = await getAllAccounts();
-
-		if (accounts.length === 0) {
-			return res.status(404).json({ error: "No accounts found" });
-		}
 		return res.status(200).json(accounts);
 	} catch (error) {
 		res
