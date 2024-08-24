@@ -8,12 +8,13 @@ export const Shop = {
 		return result.insertId;
 	},
 	getAll: async (accountId) => {
-		const query = "SELECT * FROM shops WHERE accountId = ?";
+		const query = "SELECT * FROM shops WHERE accountId = ? AND isActive = true";
 		const [result] = await pool.query(query, [accountId]);
 		return result;
 	},
 	getById: async (shopId, accountId) => {
-		const query = "SELECT * FROM shops WHERE id = ? AND accountId = ?";
+		const query =
+			"SELECT * FROM shops WHERE id = ? AND accountId = ? AND isActive = true";
 		const [result] = await pool.query(query, [shopId, accountId]);
 		return result[0];
 	},
@@ -29,10 +30,10 @@ export const Shop = {
 		const [result] = await pool.query(query, queryParams);
 		return result;
 	},
-	delete: async (shopId, accountId, isActive) => {
+	delete: async (shopId, accountId) => {
 		const query =
-			"UPDATE shops SET isActive = ? WHERE id = ? AND accountId = ?";
-		const queryParams = [isActive, shopId, accountId];
+			"UPDATE shops SET isActive = false WHERE id = ? AND accountId = ?";
+		const queryParams = [shopId, accountId];
 		return await pool.query(query, queryParams);
 	},
 };

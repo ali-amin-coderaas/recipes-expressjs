@@ -17,6 +17,6 @@ export async function getById(shopId, accountId) {
 	return await Shop.getById(shopId, accountId);
 }
 
-export async function deleteShop(shopId, accountId, isActive) {
-	return await Shop.delete(shopId, accountId, isActive);
+export async function deleteShop(shopId, accountId) {
+	return await Shop.delete(shopId, accountId);
 }

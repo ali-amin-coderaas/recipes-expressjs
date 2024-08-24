@@ -29,7 +29,7 @@ export const Account = {
 	},
 
 	getById: async (id) => {
-		const query = "SELECT * FROM accounts WHERE id = ?";
+		const query = "SELECT * FROM accounts WHERE id = ? AND isActive = true";
 		const queryParams = [id];
 		const [result] = await pool.query(query, queryParams);
 		return result[0];
@@ -43,9 +43,9 @@ export const Account = {
 		const [result] = await pool.query(query, queryParams);
 		return result;
 	},
-	delete: async (id, isActive) => {
-		const query = "UPDATE accounts SET isActive = ? WHERE id = ?";
-		const queryParams = [isActive, id];
+	delete: async (id) => {
+		const query = "UPDATE accounts SET isActive = false WHERE id = ?";
+		const queryParams = [id];
 		return await pool.query(query, queryParams);
 	},
 };

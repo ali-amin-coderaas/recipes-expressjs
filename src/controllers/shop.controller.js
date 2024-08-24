@@ -78,10 +78,8 @@ const updateShopById = async (req, res) => {
 
 const deleteShopById = async (req, res) => {
 	const { accountId, shopId } = req.params;
-	const isActive = false;
-
 	try {
-		const result = await deleteShop(shopId, accountId, isActive);
+		const result = await deleteShop(shopId, accountId);
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ error: "Shop not found" });
 		}
