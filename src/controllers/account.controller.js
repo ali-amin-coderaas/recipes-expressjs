@@ -22,8 +22,9 @@ const createAccount = async (req, res) => {
 };
 
 const getAccounts = async (req, res) => {
+	const pageSize = req.query.pageSize;
+	const page = req.query.page;
 	try {
-		const { page, pageSize } = req.query;
 		const accountsData = await getAllAccounts(page, pageSize);
 		// Format response for success
 		const response = formatResponse(

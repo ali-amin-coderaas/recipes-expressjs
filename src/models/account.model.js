@@ -9,7 +9,10 @@ export const Account = {
 		const [result] = await pool.query(query, queryParams);
 		return result.insertId;
 	},
-	getAll: async (page = 1, pageSize = 5) => {
+	getAll: async (page, pageSize) => {
+		if (isNaN(page) || page < 1) page = 1;
+		if (isNaN(pageSize) || pageSize < 1) pageSize = 5;
+
 		const offset = (page - 1) * pageSize;
 		const countQuery =
 			"SELECT COUNT(*) AS totalItems FROM accounts a WHERE a.isActive = true";
@@ -32,7 +35,10 @@ export const Account = {
         LIMIT 
             ? OFFSET ?
     `;
-		const [accounts] = await pool.query(query, [pageSize, offset]);
+		const [accounts] = await pool.query(query, [
+			parseInt(pageSize),
+			parseInt(offset),
+		]);
 		return {
 			items: accounts,
 			totalItems,
