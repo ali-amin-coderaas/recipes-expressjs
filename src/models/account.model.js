@@ -1,5 +1,4 @@
 import pool from "../configs/database.js";
-import formatResponse from "../utils/responseHelper.js";
 
 export const Account = {
 	create: async (name) => {

@@ -6,7 +6,9 @@ import {
 	updateAccount,
 } from "../services/account.service.js";
 
-import formatResponse from "../utils/responseHelper.js";
+import { handleError, handleSuccess } from "../utils/responseHelper.js";
+
+const entityName = "Accounts";
 
 const createAccount = async (req, res) => {
 	const { name } = req.body;
@@ -22,33 +24,40 @@ const createAccount = async (req, res) => {
 };
 
 const getAccounts = async (req, res) => {
-	const pageSize = req.query.pageSize;
-	const page = req.query.page;
+	const { page = 1, pageSize = 5 } = req.query;
+	const currPage = parseInt(page, 10);
+	const size = parseInt(pageSize, 10);
 	try {
-		const accountsData = await getAllAccounts(page, pageSize);
-		// Format response for success
-		const response = formatResponse(
-			200, // HTTP status code
-			accountsData, // Data to include in the response
-			null, // No error
-			req.originalUrl, // Request path
-			req.method // Request method
-		);
+		const data = await getAllAccounts(currPage, size);
 
-		// Send the formatted response
-		res.status(200).json(response);
+		const { items, totalItems, currentPage, totalPages } = data;
+		const pagination = {
+			currentPage,
+			pageSize: size,
+			totalItems,
+			totalPages,
+		};
+		const links = {
+			self: `${req.baseUrl}${req.path}?page=${Number(
+				currentPage
+			)}&pageSize=${pageSize}`,
+			next:
+				currentPage < totalPages
+					? `${req.baseUrl}${req.path}?page=${
+							Number(currentPage) + 1
+					  }&pageSize=${pageSize}`
+					: null,
+			previous:
+				currentPage > 1
+					? `${req.baseUrl}${req.path}?page=${
+							Number(currentPage) - 1
+					  }&pageSize=${pageSize}`
+					: null,
+		};
+
+		handleSuccess(res, 200, { items }, req, pagination, links, entityName);
 	} catch (error) {
-		// Format response for error
-		const response = formatResponse(
-			500, // HTTP status code (e.g., internal server error)
-			null, // No data
-			{ message: error.message }, // Error information
-			req.originalUrl, // Request path
-			req.method // Request method
-		);
-
-		// Send the formatted error response
-		res.status(500).json(response);
+		handleError(res, 500, error, req,);
 	}
 };
 

@@ -1,54 +1,68 @@
 import { v4 as uuidv4 } from "uuid";
 
-const formatResponse = (statusCode, data, error, path, method) => {
-	const startTime = Date.now();
-	const totalItems = data ? data.totalItems : 0;
-	const currentPage = data ? data.currentPage : 1;
-	const pageSize = data ? data.pageSize : 10;
-	const totalPages = Math.ceil(totalItems / pageSize);
+const requestId = uuidv4();
 
-	const response = {
+function handleSuccess(
+	res,
+	statusCode,
+	data,
+	req,
+	pagination = null,
+	links = null,
+	entityName = null
+) {
+	const startTime = req.startTime || Date.now();
+	const executionTime = `${Date.now() - startTime}ms`;
+
+	res.status(statusCode).json({
 		status: {
 			code: statusCode,
-			message: statusCode === 200 ? "OK" : "Error",
+			message: res.statusMessage || "OK",
 			timestamp: new Date().toISOString(),
-			path,
-			method,
-			requestId: uuidv4(), // Example request ID
+			path: req.originalUrl,
+			method: req.method,
+			requestId: requestId || null,
 		},
-		data:
-			statusCode === 200
-				? {
-						items: data ? data.items : null,
-						pagination: {
-							totalItems,
-							currentPage,
-							pageSize,
-							totalPages,
-						},
-						links: {
-							self: `${path}?page=${currentPage}&pageSize=${pageSize}`,
-							next:
-								currentPage < totalPages
-									? `${path}?page=${currentPage + 1}&pageSize=${pageSize}`
-									: null,
-							previous:
-								currentPage > 1
-									? `${path}?page=${currentPage - 1}&pageSize=${pageSize}`
-									: null,
-						},
-				  }
-				: null,
-		error: error || null,
+		data: {
+			items: data.items || data,
+			pagination: pagination || null,
+			links: links || null,
+		},
+		error: null,
 		meta: {
 			version: "1.0.0",
-			api: "Mall Insights API",
+			api: `${entityName} API`,
 			environment: process.env.NODE_ENV || "development",
-			executionTime: `${Date.now() - startTime}ms`,
+			executionTime: executionTime,
 		},
-	};
+	});
+}
 
-	return response;
-};
+function handleError(res, statusCode, error, req) {
+	const startTime = req.startTime || Date.now();
+	const executionTime = `${Date.now() - startTime}ms`;
 
-export default formatResponse;
+	res.status(statusCode).json({
+		status: {
+			code: statusCode,
+			message: res.statusMessage || "An error occurred",
+			timestamp: new Date().toISOString(),
+			path: req.originalUrl,
+			method: req.method,
+			requestId: requestId || null,
+		},
+		data: null,
+		error: {
+			message: error.message || error,
+			details: error.details || null,
+		},
+		meta: {
+			version: "1.0.0",
+			api: `${entityName} API`,
+			environment: process.env.NODE_ENV || "development",
+			executionTime: executionTime,
+		},
+	});
+}
+
+export { handleError, handleSuccess };
