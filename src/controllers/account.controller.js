@@ -24,7 +24,7 @@ const createAccount = async (req, res) => {
 const getAccounts = async (req, res) => {
 	try {
 		const { page, pageSize } = req.query;
-		const accountsData = await getAllAccounts();
+		const accountsData = await getAllAccounts(page, pageSize);
 		// Format response for success
 		const response = formatResponse(
 			200, // HTTP status code
