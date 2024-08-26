@@ -6,6 +6,8 @@ import {
 	updateAccount,
 } from "../services/account.service.js";
 
+import formatResponse from "../utils/responseHelper.js";
+
 const createAccount = async (req, res) => {
 	const { name } = req.body;
 	try {
@@ -21,13 +23,31 @@ const createAccount = async (req, res) => {
 
 const getAccounts = async (req, res) => {
 	try {
-		const accounts = await getAllAccounts();
-		return res.status(200).json(accounts);
+		const { page, pageSize } = req.query;
+		const accountsData = await getAllAccounts();
+		// Format response for success
+		const response = formatResponse(
+			200, // HTTP status code
+			accountsData, // Data to include in the response
+			null, // No error
+			req.originalUrl, // Request path
+			req.method // Request method
+		);
+
+		// Send the formatted response
+		res.status(200).json(response);
 	} catch (error) {
-		res
-			.status(500)
-			.json({ error: "An error occurred while fetching accounts" });
-		console.error(error);
+		// Format response for error
+		const response = formatResponse(
+			500, // HTTP status code (e.g., internal server error)
+			null, // No data
+			{ message: error.message }, // Error information
+			req.originalUrl, // Request path
+			req.method // Request method
+		);
+
+		// Send the formatted error response
+		res.status(500).json(response);
 	}
 };
 

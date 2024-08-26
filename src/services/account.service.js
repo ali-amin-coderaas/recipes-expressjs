@@ -8,8 +8,8 @@ export async function updateAccount(id, fieldsToUpdate) {
 	return await Account.update(id, fieldsToUpdate);
 }
 
-export async function getAllAccounts() {
-	return await Account.getAll();
+export async function getAllAccounts(page, pageSize) {
+	return await Account.getAll(page, pageSize);
 }
 export async function getById(id) {
 	return await Account.getById(id);

@@ -1,4 +1,5 @@
 import pool from "../configs/database.js";
+import formatResponse from "../utils/responseHelper.js";
 
 export const Account = {
 	create: async (name) => {
@@ -8,24 +9,37 @@ export const Account = {
 		const [result] = await pool.query(query, queryParams);
 		return result.insertId;
 	},
-	getAll: async () => {
+	getAll: async (page = 1, pageSize = 5) => {
+		const offset = (page - 1) * pageSize;
+		const countQuery =
+			"SELECT COUNT(*) AS totalItems FROM accounts a WHERE a.isActive = true";
+
+		const [[{ totalItems }]] = await pool.query(countQuery);
 		const query = `
-			SELECT 
-				a.*, 
-				COUNT(s.id) AS shopCount 
-			FROM 
-				accounts a
-			LEFT JOIN 
-				shops s 
-			ON 
-				a.id = s.accountId AND s.isActive = true
-			WHERE 
-				a.isActive = true
-			GROUP BY 
-				a.id
-		`;
-		const [result] = await pool.query(query);
-		return result;
+        SELECT 
+            a.*, 
+            COUNT(s.id) AS shopCount 
+        FROM 
+            accounts a
+        LEFT JOIN 
+            shops s 
+        ON 
+            a.id = s.accountId AND s.isActive = true
+        WHERE 
+            a.isActive = true
+        GROUP BY 
+            a.id
+        LIMIT 
+            ? OFFSET ?
+    `;
+		const [accounts] = await pool.query(query, [pageSize, offset]);
+		return {
+			items: accounts,
+			totalItems,
+			currentPage: page,
+			pageSize,
+			totalPages: Math.ceil(totalItems / pageSize),
+		};
 	},
 
 	getById: async (id) => {
