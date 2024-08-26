@@ -10,7 +10,6 @@ export const Account = {
 		return result.insertId;
 	},
 	getAll: async (page, pageSize) => {
-		if (isNaN(page) || page < 1) page = 1;
 		if (isNaN(pageSize) || pageSize < 1) pageSize = 5;
 
 		const offset = (page - 1) * pageSize;
