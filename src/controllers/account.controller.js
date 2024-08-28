@@ -24,9 +24,18 @@ const createAccount = async (req, res) => {
 };
 
 const getAccounts = async (req, res) => {
-	const { page = 1, pageSize = 5 } = req.query;
+	let { page, pageSize } = req.query;
+
+	if (!pageSize) {
+		pageSize = 5;
+	}
+	if (!page) {
+		page = 1;
+	}
+
 	const currPage = parseInt(page, 10);
 	const size = parseInt(pageSize, 10);
+
 	try {
 		const data = await getAllAccounts(currPage, size);
 
@@ -57,7 +66,7 @@ const getAccounts = async (req, res) => {
 
 		handleSuccess(res, 200, { items }, req, pagination, links, entityName);
 	} catch (error) {
-		handleError(res, 500, error, req,);
+		handleError(res, 500, error, req);
 	}
 };
 
