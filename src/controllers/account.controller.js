@@ -14,12 +14,9 @@ const createAccount = async (req, res) => {
 	const { name } = req.body;
 	try {
 		const newAccountId = await addAccount(name);
-		return res.status(201).json({ id: newAccountId });
+		handleSuccess(res, 201, { id: newAccountId }, req, null, null, entityName);
 	} catch (error) {
-		res
-			.status(500)
-			.json({ error: "An error occurred while creating the account" });
-		console.error(error);
+		handleError(res, 500, error, req, entityName);
 	}
 };
 
