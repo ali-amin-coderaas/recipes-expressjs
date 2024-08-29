@@ -5,6 +5,7 @@ import {
 	getById,
 	updateShop,
 } from "../services/shop.service.js";
+import { handleSuccess } from "../utils/responseHelper.js";
 
 const createShop = async (req, res) => {
 	const { accountId } = req.params;
@@ -38,17 +39,49 @@ const getShop = async (req, res) => {
 
 const getShops = async (req, res) => {
 	const { accountId } = req.params;
+	let { page, pageSize } = req.query;
+
+	if (!pageSize) {
+		pageSize = 5;
+	}
+	if (!page) {
+		page = 1;
+	}
+
+	const currPage = parseInt(page, 10);
+	const size = parseInt(pageSize, 10);
+
 	try {
-		const shops = await getAllShops(accountId);
-		if (shops.length === 0) {
-			return res.status(404).json({ error: "No shops found" });
-		}
-		return res.json(shops);
+		const data = await getAllAccounts(accountId, currPage, size);
+
+		const { items, totalItems, currentPage, totalPages } = data;
+		const pagination = {
+			currentPage,
+			pageSize: size,
+			totalItems,
+			totalPages,
+		};
+		const links = {
+			self: `${req.baseUrl}${req.path}?page=${Number(
+				currentPage
+			)}&pageSize=${pageSize}`,
+			next:
+				currentPage < totalPages
+					? `${req.baseUrl}${req.path}?page=${
+							Number(currentPage) + 1
+					  }&pageSize=${pageSize}`
+					: null,
+			previous:
+				currentPage > 1
+					? `${req.baseUrl}${req.path}?page=${
+							Number(currentPage) - 1
+					  }&pageSize=${pageSize}`
+					: null,
+		};
+
+		handleSuccess(res, 200, { items }, req, pagination, links, entityName);
 	} catch (error) {
-		res
-			.status(500)
-			.json({ error: "An error occurred while fetching the shops" });
-		console.error(error);
+		handleError(res, 500, error, req, entityName);
 	}
 };
 

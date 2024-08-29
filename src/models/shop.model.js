@@ -7,10 +7,27 @@ export const Shop = {
 		const [result] = await pool.query(query, queryParams);
 		return result.insertId;
 	},
-	getAll: async (accountId) => {
-		const query = "SELECT * FROM shops WHERE accountId = ? AND isActive = true";
-		const [result] = await pool.query(query, [accountId]);
-		return result;
+	getAll: async (accountId, page, pageSize) => {
+		const offset = (page - 1) * pageSize;
+
+		const countQuery = `SELECT COUNT(*) AS totalItems FROM shops WHERE accountId = ? AND isActive = true`;
+
+		const [[{ totalItems }]] = await pool.query(countQuery);
+		const query =
+			"SELECT * FROM shops WHERE accountId = ? AND isActive = true lIMIT ? OFFSET ?";
+
+		const [shops] = await pool.query(query, [
+			accountId,
+			parseInt(pageSize),
+			parseInt(offset),
+		]);
+		return {
+			items: shops,
+			totalItems,
+			currentPage: page,
+			pageSize,
+			totalPages: Math.ceil(totalItems / pageSize),
+		};
 	},
 	getById: async (shopId, accountId) => {
 		const query =
