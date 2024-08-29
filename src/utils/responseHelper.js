@@ -38,7 +38,7 @@ function handleSuccess(
 	});
 }
 
-function handleError(res, statusCode, error, req) {
+function handleError(res, statusCode, error, req, entityName) {
 	const startTime = req.startTime || Date.now();
 	const executionTime = `${Date.now() - startTime}ms`;
 

@@ -66,7 +66,7 @@ const getAccounts = async (req, res) => {
 
 		handleSuccess(res, 200, { items }, req, pagination, links, entityName);
 	} catch (error) {
-		handleError(res, 500, error, req);
+		handleError(res, 500, error, req, entityName);
 	}
 };
 
@@ -78,12 +78,9 @@ const getAccountById = async (req, res) => {
 		if (!account) {
 			return res.status(404).json({ error: "Account not found" });
 		}
-		return res.status(200).json(account);
+		handleSuccess(res, 200, account, req, null, null, entityName);
 	} catch (error) {
-		res
-			.status(500)
-			.json({ error: "An error occurred while retrieving account data" });
-		console.error(error);
+		handleError(res, 500, error, req, entityName);
 	}
 };
 
@@ -96,10 +93,17 @@ const updateAccountById = async (req, res) => {
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ error: "Account not found" });
 		}
-		return res.status(200).json({ message: "Account updated successfully" });
+		handleSuccess(
+			res,
+			200,
+			{ message: "Account updated successfully" },
+			req,
+			null,
+			null,
+			entityName
+		);
 	} catch (error) {
-		res.status(500).json({ error: "An error occurred while updating account" });
-		console.error(error);
+		handleError(res, 500, error, req, entityName);
 	}
 };
 
@@ -110,10 +114,17 @@ const deleteAccountById = async (req, res) => {
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ error: "Account not found" });
 		}
-		return res.status(200).json({ message: "Account delted successfully" });
+		handleSuccess(
+			res,
+			200,
+			{ message: "Account deleted successfully" },
+			req,
+			null,
+			null,
+			entityName
+		);
 	} catch (error) {
-		res.status(500).json({ error: "An error occurred while deleting account" });
-		console.error(error);
+		handleError(res, 500, error, req, entityName);
 	}
 };
 
