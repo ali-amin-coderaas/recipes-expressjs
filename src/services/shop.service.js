@@ -9,8 +9,8 @@ export async function updateShop(shopId, accountId, fieldsToUpdate) {
 	return await Shop.update(shopId, accountId, fieldsToUpdate);
 }
 
-export async function getAllShops(accountId) {
-	return await Shop.getAll(accountId);
+export async function getAllShops(accountId, page, pageSize) {
+	return await Shop.getAll(accountId, page, pageSize);
 }
 
 export async function getById(shopId, accountId) {

@@ -5,40 +5,12 @@ import {
 	getById,
 	updateShop,
 } from "../services/shop.service.js";
-import { handleSuccess } from "../utils/responseHelper.js";
+import { handleError, handleSuccess } from "../utils/responseHelper.js";
 
-const createShop = async (req, res) => {
-	const { accountId } = req.params;
-	const { name, businessName, email } = req.body;
-
-	try {
-		const newShopId = await addShop(accountId, name, businessName, email);
-		return res.status(201).json({ shopId: newShopId });
-	} catch (error) {
-		res
-			.status(500)
-			.json({ error: "An error occurred while creating the shop" });
-		console.error(error);
-	}
-};
-const getShop = async (req, res) => {
-	const { accountId, shopId } = req.params;
-	try {
-		const shop = await getById(shopId, accountId);
-		if (!shop) {
-			return res.status(404).json({ error: "Shop not found" });
-		}
-		return res.status(200).json(shop);
-	} catch (error) {
-		res
-			.status(500)
-			.json({ error: "An error occurred while fetching the shop" });
-		console.error(error);
-	}
-};
+const entityName = "Shops";
 
 const getShops = async (req, res) => {
-	const { accountId } = req.params;
+	let { accountId } = req.params;
 	let { page, pageSize } = req.query;
 
 	if (!pageSize) {
@@ -52,7 +24,7 @@ const getShops = async (req, res) => {
 	const size = parseInt(pageSize, 10);
 
 	try {
-		const data = await getAllAccounts(accountId, currPage, size);
+		const data = await getAllShops(accountId, currPage, size);
 
 		const { items, totalItems, currentPage, totalPages } = data;
 		const pagination = {
@@ -82,6 +54,36 @@ const getShops = async (req, res) => {
 		handleSuccess(res, 200, { items }, req, pagination, links, entityName);
 	} catch (error) {
 		handleError(res, 500, error, req, entityName);
+	}
+};
+
+const createShop = async (req, res) => {
+	const { accountId } = req.params;
+	const { name, businessName, email } = req.body;
+
+	try {
+		const newShopId = await addShop(accountId, name, businessName, email);
+		return res.status(201).json({ shopId: newShopId });
+	} catch (error) {
+		res
+			.status(500)
+			.json({ error: "An error occurred while creating the shop" });
+		console.error(error);
+	}
+};
+const getShop = async (req, res) => {
+	const { accountId, shopId } = req.params;
+	try {
+		const shop = await getById(shopId, accountId);
+		if (!shop) {
+			return res.status(404).json({ error: "Shop not found" });
+		}
+		return res.status(200).json(shop);
+	} catch (error) {
+		res
+			.status(500)
+			.json({ error: "An error occurred while fetching the shop" });
+		console.error(error);
 	}
 };
 

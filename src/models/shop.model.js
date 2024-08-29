@@ -10,14 +10,16 @@ export const Shop = {
 	getAll: async (accountId, page, pageSize) => {
 		const offset = (page - 1) * pageSize;
 
-		const countQuery = `SELECT COUNT(*) AS totalItems FROM shops WHERE accountId = ? AND isActive = true`;
+		const countQuery = `SELECT COUNT(*) AS totalItems FROM shops s WHERE s.accountId = ? AND s.isActive = true`;
 
-		const [[{ totalItems }]] = await pool.query(countQuery);
+		const [[{ totalItems }]] = await pool.query(countQuery, [
+			parseInt(accountId),
+		]);
 		const query =
 			"SELECT * FROM shops WHERE accountId = ? AND isActive = true lIMIT ? OFFSET ?";
 
 		const [shops] = await pool.query(query, [
-			accountId,
+			parseInt(accountId),
 			parseInt(pageSize),
 			parseInt(offset),
 		]);
