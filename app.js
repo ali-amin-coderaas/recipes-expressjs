@@ -19,7 +19,7 @@ app.use("/", recipesRouter);
 
 app.use("/", userRouter);
 
-app.use("/", authenticateToken, accountRouter);
+app.use("/", accountRouter);
 
 app.use("/", authenticateToken, shopRouter);
 

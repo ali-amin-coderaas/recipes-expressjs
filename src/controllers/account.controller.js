@@ -21,47 +21,33 @@ const createAccount = async (req, res) => {
 };
 
 const getAccounts = async (req, res) => {
-	let { page, pageSize } = req.query;
-
-	if (!pageSize) {
-		pageSize = 5;
-	}
-	if (!page) {
-		page = 1;
-	}
-
-	const currPage = parseInt(page, 10);
-	const size = parseInt(pageSize, 10);
+	const searchQuery = req.query.q || "";
+	const page = Number(req.query.page) || 1;
+	const pageSize = Number(req.query.pageSize) || 0;
+	console.log("🚀 ~ getAccounts ~ pageSize:", pageSize)
+	console.log("🚀 ~ getAccounts ~ pageSize:", req.query.pageSize);
+	const sortBy = req.query.sortBy || "";
+	const order = req.query.order || "";
 
 	try {
-		const data = await getAllAccounts(currPage, size);
+		const data = await getAllAccounts(
+			page,
+			pageSize,
+			searchQuery,
+			sortBy,
+			order
+		);
 
 		const { items, totalItems, currentPage, totalPages } = data;
 		const pagination = {
 			currentPage,
-			pageSize: size,
+			pageSize: data.pageSize,
 			totalItems,
 			totalPages,
 		};
-		const links = {
-			self: `${req.baseUrl}${req.path}?page=${Number(
-				currentPage
-			)}&pageSize=${pageSize}`,
-			next:
-				currentPage < totalPages
-					? `${req.baseUrl}${req.path}?page=${
-							Number(currentPage) + 1
-					  }&pageSize=${pageSize}`
-					: null,
-			previous:
-				currentPage > 1
-					? `${req.baseUrl}${req.path}?page=${
-							Number(currentPage) - 1
-					  }&pageSize=${pageSize}`
-					: null,
-		};
+		console.log("🚀 ~ getAccounts ~ pagination:", pagination);
 
-		handleSuccess(res, 200, { items }, req, pagination, links, entityName);
+		handleSuccess(res, 200, { items }, req, pagination, null, entityName);
 	} catch (error) {
 		handleError(res, 500, error, req, entityName);
 	}

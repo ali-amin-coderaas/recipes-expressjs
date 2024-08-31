@@ -8,35 +8,61 @@ export const Account = {
 		const [result] = await pool.query(query, queryParams);
 		return result.insertId;
 	},
-	getAll: async (page, pageSize) => {
-		if (isNaN(pageSize) || pageSize < 1) pageSize = 5;
+	getAll: async (
+		page,
+		pageSize,
+		searchQuery,
+		sortBy = "createdAt",
+		order = "asc"
+	) => {
+		page = parseInt(page, 10) || 1;
 
+		console.log(pageSize);
+
+		if (pageSize < 1) pageSize = 5;
 		const offset = (page - 1) * pageSize;
-		const countQuery =
-			"SELECT COUNT(*) AS totalItems FROM accounts a WHERE a.isActive = true";
+		let query = `
+			SELECT 
+				a.*, 
+				COUNT(s.id) AS shopCount 
+			FROM 
+				accounts a
+			LEFT JOIN 
+				shops s 
+			ON 
+				a.id = s.accountId AND s.isActive = true
+			WHERE 
+				a.isActive = true
+		`;
+		let queryParams = [];
 
-		const [[{ totalItems }]] = await pool.query(countQuery);
-		const query = `
-        SELECT 
-            a.*, 
-            COUNT(s.id) AS shopCount 
-        FROM 
-            accounts a
-        LEFT JOIN 
-            shops s 
-        ON 
-            a.id = s.accountId AND s.isActive = true
-        WHERE 
-            a.isActive = true
-        GROUP BY 
-            a.id
-        LIMIT 
-            ? OFFSET ?
-    `;
-		const [accounts] = await pool.query(query, [
-			parseInt(pageSize),
-			parseInt(offset),
-		]);
+		if (searchQuery) {
+			query += " AND a.name LIKE ?";
+			queryParams.push(`%${searchQuery}%`);
+		}
+		query += " GROUP BY a.id";
+
+		if (sortBy) {
+			query += ` ORDER BY ${sortBy}`;
+			if (order) {
+				query += ` ${order}`;
+			}
+		}
+
+		query += ` LIMIT ? OFFSET ?`;
+		queryParams.push(parseInt(pageSize, 10), parseInt(offset, 10));
+
+		const countQuery = `
+			SELECT COUNT(*) AS totalItems 
+			FROM accounts a 
+			WHERE a.isActive = true 
+			${searchQuery ? "AND a.name LIKE ?" : ""}
+		`;
+		const countParams = searchQuery ? [`%${searchQuery}%`] : [];
+		const [[{ totalItems }]] = await pool.query(countQuery, countParams);
+
+		const [accounts] = await pool.query(query, queryParams);
+
 		return {
 			items: accounts,
 			totalItems,
