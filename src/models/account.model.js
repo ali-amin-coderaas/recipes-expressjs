@@ -13,7 +13,7 @@ export const Account = {
 		pageSize,
 		searchQuery,
 		sortBy = "createdAt",
-		order = "asc"
+		order = "desc"
 	) => {
 		page = parseInt(page, 10) || 1;
 
