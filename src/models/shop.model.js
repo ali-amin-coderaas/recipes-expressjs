@@ -7,22 +7,64 @@ export const Shop = {
 		const [result] = await pool.query(query, queryParams);
 		return result.insertId;
 	},
-	getAll: async (accountId, page, pageSize) => {
+	getAll: async (
+		accountId,
+		page = 1,
+		pageSize = 5,
+		searchQuery = "",
+		sortBy = "createdAt",
+		order = "asc"
+	) => {
+		page = parseInt(page, 10) || 1;
+		pageSize = parseInt(pageSize, 10) || 5;
 		const offset = (page - 1) * pageSize;
 
-		const countQuery = `SELECT COUNT(*) AS totalItems FROM shops s WHERE s.accountId = ? AND s.isActive = true`;
+		// Count query for pagination
+		let countQuery = `
+			SELECT COUNT(*) AS totalItems 
+			FROM shops s 
+			WHERE s.accountId = ? 
+			AND s.isActive = true
+		`;
+		let countParams = [parseInt(accountId)];
 
-		const [[{ totalItems }]] = await pool.query(countQuery, [
-			parseInt(accountId),
-		]);
-		const query =
-			"SELECT * FROM shops WHERE accountId = ? AND isActive = true lIMIT ? OFFSET ?";
+		// Main query for fetching shops
+		let query = `
+			SELECT * 
+			FROM shops 
+			WHERE accountId = ? 
+			AND isActive = true
+		`;
+		let queryParams = [parseInt(accountId)];
 
-		const [shops] = await pool.query(query, [
-			parseInt(accountId),
-			parseInt(pageSize),
-			parseInt(offset),
-		]);
+		// Apply search filter
+		if (searchQuery) {
+			countQuery += " AND s.name LIKE ?";
+			query += " AND name LIKE ?";
+			const searchValue = `%${searchQuery}%`;
+			countParams.push(searchValue);
+			queryParams.push(searchValue);
+		}
+
+		// Apply sorting
+		if (sortBy) {
+			query += ` ORDER BY ${sortBy}`;
+			if (order) {
+				query += ` ${order}`;
+			}
+		}
+
+		// Apply pagination
+		query += " LIMIT ? OFFSET ?";
+		queryParams.push(pageSize, offset);
+
+		// Execute the count query
+		const [[{ totalItems }]] = await pool.query(countQuery, countParams);
+
+		// Execute the main query
+		const [shops] = await pool.query(query, queryParams);
+
+		// Return the paginated result
 		return {
 			items: shops,
 			totalItems,
@@ -31,6 +73,7 @@ export const Shop = {
 			totalPages: Math.ceil(totalItems / pageSize),
 		};
 	},
+
 	getById: async (shopId, accountId) => {
 		const query =
 			"SELECT * FROM shops WHERE id = ? AND accountId = ? AND isActive = true";

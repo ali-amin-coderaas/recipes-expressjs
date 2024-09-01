@@ -17,8 +17,6 @@ export const Account = {
 	) => {
 		page = parseInt(page, 10) || 1;
 
-		console.log(pageSize);
-
 		if (pageSize < 1) pageSize = 5;
 		const offset = (page - 1) * pageSize;
 		let query = `

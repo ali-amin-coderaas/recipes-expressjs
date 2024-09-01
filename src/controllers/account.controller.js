@@ -24,8 +24,6 @@ const getAccounts = async (req, res) => {
 	const searchQuery = req.query.q || "";
 	const page = Number(req.query.page) || 1;
 	const pageSize = Number(req.query.pageSize) || 0;
-	console.log("🚀 ~ getAccounts ~ pageSize:", pageSize)
-	console.log("🚀 ~ getAccounts ~ pageSize:", req.query.pageSize);
 	const sortBy = req.query.sortBy || "";
 	const order = req.query.order || "";
 
@@ -45,7 +43,6 @@ const getAccounts = async (req, res) => {
 			totalItems,
 			totalPages,
 		};
-		console.log("🚀 ~ getAccounts ~ pagination:", pagination);
 
 		handleSuccess(res, 200, { items }, req, pagination, null, entityName);
 	} catch (error) {
