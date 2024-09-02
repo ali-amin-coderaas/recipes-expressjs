@@ -21,9 +21,9 @@ app.use(cors());
 
 app.use("/", userRouter);
 
-app.use("/accounts", accountRouter);
+app.use("/accounts", authenticateToken, accountRouter);
 
-app.use("/accounts", shopRouter);
+app.use("/accounts", authenticateToken, shopRouter);
 
 app.use("/recipes", authenticateToken, recipesRouter);
 
