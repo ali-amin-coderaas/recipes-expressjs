@@ -8,17 +8,12 @@ export const Account = {
 		const [result] = await pool.query(query, queryParams);
 		return result.insertId;
 	},
-	getAll: async (
-		page,
-		pageSize,
-		searchQuery,
-		sortBy = "createdAt",
-		order = "desc"
-	) => {
+	getAll: async (page, pageSize, searchQuery, sortBy, order) => {
 		page = parseInt(page, 10) || 1;
-
 		if (pageSize < 1) pageSize = 5;
+
 		const offset = (page - 1) * pageSize;
+		
 		let query = `
 			SELECT 
 				a.*, 

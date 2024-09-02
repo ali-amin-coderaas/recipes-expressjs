@@ -6,9 +6,10 @@ dotenv.config();
 const secret = process.env.JWT_SECRET;
 
 const authenticateToken = (req, res, next) => {
-	const authHeader = req.headers["authorization"];
+	const authHeader = req.headers["Authorization"];
 
 	const token = authHeader && authHeader.split(" ")[1];
+	console.log("🚀 ~ authenticateToken ~ token:", token);
 
 	if (!token) return res.sendStatus(401);
 

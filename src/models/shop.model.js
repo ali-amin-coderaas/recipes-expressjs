@@ -7,46 +7,38 @@ export const Shop = {
 		const [result] = await pool.query(query, queryParams);
 		return result.insertId;
 	},
-	getAll: async (
-		accountId,
-		page = 1,
-		pageSize = 5,
-		searchQuery = "",
-		sortBy = "createdAt",
-		order = "desc"
-	) => {
+	getAll: async (accountId, page, pageSize, searchQuery, sortBy, order) => {
 		page = parseInt(page, 10) || 1;
-		pageSize = parseInt(pageSize, 10) || 5;
+		if (pageSize < 1) pageSize = 5;
+
 		const offset = (page - 1) * pageSize;
 
-		// Count query for pagination
-		let countQuery = `
-			SELECT COUNT(*) AS totalItems 
-			FROM shops s 
-			WHERE s.accountId = ? 
-			AND s.isActive = true
-		`;
-		let countParams = [parseInt(accountId)];
+		accountId = parseInt(accountId, 10);
 
-		// Main query for fetching shops
+		const countQuery = `
+		SELECT COUNT(*) AS totalItems 
+		FROM shops s 
+		WHERE s.isActive = true 
+		${searchQuery ? "AND s.name LIKE ?" : ""}
+	`;
+		const countParams = searchQuery ? [`%${searchQuery}%`] : [];
+		const [[{ totalItems }]] = await pool.query(countQuery, countParams);
+
 		let query = `
-			SELECT * 
-			FROM shops 
-			WHERE accountId = ? 
-			AND isActive = true
-		`;
-		let queryParams = [parseInt(accountId)];
+        SELECT s.* 
+        FROM shops s 
+        WHERE s.accountId = ? 
+				AND isActive = true
+    `;
 
-		// Apply search filter
+		let queryParams = [accountId];
+
 		if (searchQuery) {
-			countQuery += " AND s.name LIKE ?";
-			query += " AND name LIKE ?";
-			const searchValue = `%${searchQuery}%`;
-			countParams.push(searchValue);
-			queryParams.push(searchValue);
+			query += " AND s.name LIKE ?";
+			queryParams.push(`%${searchQuery}%`);
 		}
+		console.log("🚀 ~ getAll: ~ searchQuery:", searchQuery);
 
-		// Apply sorting
 		if (sortBy) {
 			query += ` ORDER BY ${sortBy}`;
 			if (order) {
@@ -54,17 +46,11 @@ export const Shop = {
 			}
 		}
 
-		// Apply pagination
-		query += " LIMIT ? OFFSET ?";
-		queryParams.push(pageSize, offset);
+		query += ` LIMIT ? OFFSET ?`;
+		queryParams.push(parseInt(pageSize, 10), parseInt(offset, 10));
 
-		// Execute the count query
-		const [[{ totalItems }]] = await pool.query(countQuery, countParams);
-
-		// Execute the main query
 		const [shops] = await pool.query(query, queryParams);
 
-		// Return the paginated result
 		return {
 			items: shops,
 			totalItems,

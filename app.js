@@ -19,13 +19,13 @@ app.get("/", (req, res) => {
 app.use(express.json());
 app.use(cors());
 
-app.use("/", recipesRouter);
-
 app.use("/", userRouter);
 
-app.use("/", authenticateToken, accountRouter);
+app.use("/accounts", accountRouter);
 
-app.use("/", authenticateToken, shopRouter);
+app.use("/accounts", shopRouter);
+
+app.use("/recipes", authenticateToken, recipesRouter);
 
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);

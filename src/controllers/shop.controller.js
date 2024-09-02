@@ -11,20 +11,29 @@ const entityName = "Shops";
 
 const getShops = async (req, res) => {
 	let { accountId } = req.params;
-	let { page, pageSize } = req.query;
+	let {
+		page = 1,
+		pageSize = 5,
+		q: searchQuery,
+		sortBy = "createdAt",
+		order = "DESC",
+	} = req.query;
 
-	if (!pageSize) {
-		pageSize = 5;
-	}
-	if (!page) {
-		page = 1;
-	}
-
+	// Ensure valid integers for page and pageSize
 	const currPage = parseInt(page, 10);
 	const size = parseInt(pageSize, 10);
+	const accId = parseInt(accountId, 10);
 
 	try {
-		const data = await getAllShops(accountId, currPage, size);
+		// Call the getAllShops function with the necessary parameters
+		const data = await getAllShops(
+			accId,
+			currPage,
+			size,
+			searchQuery,
+			sortBy,
+			order
+		);
 
 		const { items, totalItems, currentPage, totalPages } = data;
 		const pagination = {
@@ -34,25 +43,25 @@ const getShops = async (req, res) => {
 			totalPages,
 		};
 		const links = {
-			self: `${req.baseUrl}${req.path}?page=${Number(
-				currentPage
-			)}&pageSize=${pageSize}`,
+			self: `${req.baseUrl}${req.path}?page=${currentPage}&pageSize=${pageSize}`,
 			next:
 				currentPage < totalPages
 					? `${req.baseUrl}${req.path}?page=${
-							Number(currentPage) + 1
+							currentPage + 1
 					  }&pageSize=${pageSize}`
 					: null,
 			previous:
 				currentPage > 1
 					? `${req.baseUrl}${req.path}?page=${
-							Number(currentPage) - 1
+							currentPage - 1
 					  }&pageSize=${pageSize}`
 					: null,
 		};
 
+		// Send a successful response with the data, pagination, and links
 		handleSuccess(res, 200, { items }, req, pagination, links, entityName);
 	} catch (error) {
+		// Handle any errors that occur during the process
 		handleError(res, 500, error, req, entityName);
 	}
 };
