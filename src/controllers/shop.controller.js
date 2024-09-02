@@ -85,9 +85,9 @@ const getShop = async (req, res) => {
 	try {
 		const shop = await getById(shopId, accountId);
 		if (!shop) {
-			return res.status(404).json({ error: "Shop not found" });
+			handleError(res, 404, "Shop not found", req, entityName);
 		}
-		return res.status(200).json(shop);
+		handleSuccess(res, 200, shop, req, null, null, entityName);
 	} catch (error) {
 		res
 			.status(500)
@@ -108,15 +108,12 @@ const updateShopById = async (req, res) => {
 		const updatedShop = await updateShop(shopId, accountId, fieldsToUpdate);
 
 		if (!updatedShop) {
-			return res.status(404).json({ error: "Shop not found" });
+			handleError(res, 404, "Shop not found", req, entityName);
 		}
 
-		return res.status(200).json({ message: "Shop updated successfully" });
+		handleSuccess(res, 200, updatedShop, req, null, null, entityName);
 	} catch (error) {
-		res
-			.status(500)
-			.json({ error: "An error occurred while updating the shop" });
-		console.error(error);
+		handleError(res, 500, error, req, entityName);
 	}
 };
 
@@ -125,12 +122,19 @@ const deleteShopById = async (req, res) => {
 	try {
 		const result = await deleteShop(shopId, accountId);
 		if (result.affectedRows === 0) {
-			return res.status(404).json({ error: "Shop not found" });
+			handleError(res, 404, "Shop not found", req, entityName);
 		}
-		return res.status(200).json({ error: "Shop deleted successfully" });
+		handleSuccess(
+			res,
+			200,
+			{ message: "Shop deleted successfully" },
+			req,
+			null,
+			null,
+			entityName
+		);
 	} catch (error) {
-		res.status(500).json({ error: "An error occurred while deleting shop" });
-		console.error(error);
+		handleError(res, 500, error, req, entityName);
 	}
 };
 

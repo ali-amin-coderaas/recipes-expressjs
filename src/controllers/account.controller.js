@@ -56,7 +56,7 @@ const getAccountById = async (req, res) => {
 		const account = await getById(id);
 
 		if (!account) {
-			return res.status(404).json({ error: "Account not found" });
+			handleError(res, 404, "Account not found", req, entityName);
 		}
 		handleSuccess(res, 200, account, req, null, null, entityName);
 	} catch (error) {

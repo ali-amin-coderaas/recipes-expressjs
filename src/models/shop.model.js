@@ -37,8 +37,6 @@ export const Shop = {
 			query += " AND s.name LIKE ?";
 			queryParams.push(`%${searchQuery}%`);
 		}
-		console.log("🚀 ~ getAll: ~ searchQuery:", searchQuery);
-
 		if (sortBy) {
 			query += ` ORDER BY ${sortBy}`;
 			if (order) {
