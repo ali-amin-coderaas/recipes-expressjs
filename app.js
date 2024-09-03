@@ -22,11 +22,11 @@ app.use(cors());
 
 app.use("/auth", userRouter);
 
-app.use("/accounts", accountRouter);
+app.use("/accounts", authenticateToken, accountRouter);
 
-app.use("/accounts", shopRouter);
+app.use("/accounts", authenticateToken, shopRouter);
 
-app.use("/stats", statsRouter);
+app.use("/stats", authenticateToken, statsRouter);
 
 app.use("/recipes", authenticateToken, recipesRouter);
 
