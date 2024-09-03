@@ -84,7 +84,7 @@ export const Shop = {
 	},
 	getByIndustry: async () => {
 		const query = `
-		SELECT industry, COUNT(*) as shopCount
+		SELECT industry, COUNT(*) as count
 		FROM shops
 		WHERE isActive = true
 		GROUP BY industry;
