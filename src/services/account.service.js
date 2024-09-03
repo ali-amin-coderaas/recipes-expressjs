@@ -24,10 +24,5 @@ export async function deleteAccount(id) {
 }
 
 export async function getAccountsByType() {
-	try {
-		const accountsByType = await Account.getByType();
-		return accountsByType;
-	} catch (error) {
-		throw new Error("Failed to fetch accounts by type");
-	}
+	return await Account.getByType();
 }

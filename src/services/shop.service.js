@@ -34,3 +34,8 @@ export async function getById(shopId, accountId) {
 export async function deleteShop(shopId, accountId) {
 	return await Shop.delete(shopId, accountId);
 }
+
+export async function getShopsByIndustry() {
+	const shopsByIndustry = await Shop.getByIndustry();
+	return shopsByIndustry;
+}

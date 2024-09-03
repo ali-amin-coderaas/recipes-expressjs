@@ -3,11 +3,10 @@ import {
 	deleteShop,
 	getAllShops,
 	getById,
+	getShopsByIndustry,
 	updateShop,
 } from "../services/shop.service.js";
 import { handleError, handleSuccess } from "../utils/responseHelper.js";
-
-const entityName = "Shops";
 
 const getShops = async (req, res) => {
 	let { accountId } = req.params;
@@ -59,10 +58,10 @@ const getShops = async (req, res) => {
 		};
 
 		// Send a successful response with the data, pagination, and links
-		handleSuccess(res, 200, { items }, req, pagination, links, entityName);
+		handleSuccess(res, 200, { items }, req, pagination, links, "Fetch shops");
 	} catch (error) {
 		// Handle any errors that occur during the process
-		handleError(res, 500, error, req, entityName);
+		handleError(res, 500, error, req, "Fetch shops");
 	}
 };
 
@@ -72,12 +71,9 @@ const createShop = async (req, res) => {
 
 	try {
 		const newShopId = await addShop(accountId, name, businessName, email);
-		return res.status(201).json({ shopId: newShopId });
+		handleSuccess(res, 201, { id: newShopId }, req, null, null, "Create shop");
 	} catch (error) {
-		res
-			.status(500)
-			.json({ error: "An error occurred while creating the shop" });
-		console.error(error);
+		handleError(res, 500, error, req, "Create shop");
 	}
 };
 const getShop = async (req, res) => {
@@ -85,14 +81,11 @@ const getShop = async (req, res) => {
 	try {
 		const shop = await getById(shopId, accountId);
 		if (!shop) {
-			handleError(res, 404, "Shop not found", req, entityName);
+			handleError(res, 404, "Shop not found", req, "Fetch Shop");
 		}
-		handleSuccess(res, 200, shop, req, null, null, entityName);
+		handleSuccess(res, 200, shop, req, null, null, "Fetch Shop");
 	} catch (error) {
-		res
-			.status(500)
-			.json({ error: "An error occurred while fetching the shop" });
-		console.error(error);
+		handleError(res, 500, error, req, "Fetch Shop");
 	}
 };
 
@@ -108,12 +101,12 @@ const updateShopById = async (req, res) => {
 		const updatedShop = await updateShop(shopId, accountId, fieldsToUpdate);
 
 		if (!updatedShop) {
-			handleError(res, 404, "Shop not found", req, entityName);
+			handleError(res, 404, "Shop not found", req, "Update Shop");
 		}
 
-		handleSuccess(res, 200, updatedShop, req, null, null, entityName);
+		handleSuccess(res, 200, updatedShop, req, null, null, "Update Shop");
 	} catch (error) {
-		handleError(res, 500, error, req, entityName);
+		handleError(res, 500, error, req, "Update Shop");
 	}
 };
 
@@ -122,7 +115,7 @@ const deleteShopById = async (req, res) => {
 	try {
 		const result = await deleteShop(shopId, accountId);
 		if (result.affectedRows === 0) {
-			handleError(res, 404, "Shop not found", req, entityName);
+			handleError(res, 404, "Shop not found", req, "Delete Shop");
 		}
 		handleSuccess(
 			res,
@@ -131,14 +124,32 @@ const deleteShopById = async (req, res) => {
 			req,
 			null,
 			null,
-			entityName
+			"Delete Shop"
 		);
 	} catch (error) {
-		handleError(res, 500, error, req, entityName);
+		handleError(res, 500, error, req, "Delete Shop");
+	}
+};
+
+const fetchShopsByIndustry = async (req, res) => {
+	try {
+		const shopsByIndustry = await getShopsByIndustry();
+		handleSuccess(
+			res,
+			200,
+			shopsByIndustry,
+			req,
+			null,
+			null,
+			"Shops  by industry"
+		);
+	} catch (error) {
+		handleError(res, 500, error, req, "Shops  by industry");
 	}
 };
 
 export default {
+	fetchShopsByIndustry,
 	getShops,
 	updateShopById,
 	createShop,

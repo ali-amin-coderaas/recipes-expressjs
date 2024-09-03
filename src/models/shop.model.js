@@ -82,4 +82,14 @@ export const Shop = {
 		const queryParams = [shopId, accountId];
 		return await pool.query(query, queryParams);
 	},
+	getByIndustry: async () => {
+		const query = `
+		SELECT industry, COUNT(*) as shopCount
+		FROM shops
+		WHERE isActive = true
+		GROUP BY industry;
+`;
+		const [result] = await pool.query(query);
+		return result;
+	},
 };

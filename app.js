@@ -6,6 +6,7 @@ import accountRouter from "./src/routes/account.route.js";
 import userRouter from "./src/routes/auth.route.js";
 import recipesRouter from "./src/routes/recipes.route.js";
 import shopRouter from "./src/routes/shop.route.js";
+import statsRouter from "./src/routes/stats.route.js";
 
 dotenv.config();
 
@@ -21,9 +22,11 @@ app.use(cors());
 
 app.use("/auth", userRouter);
 
-app.use("/accounts", authenticateToken, accountRouter);
+app.use("/accounts", accountRouter);
 
-app.use("/accounts", authenticateToken, shopRouter);
+app.use("/accounts", shopRouter);
+
+app.use("/stats", statsRouter);
 
 app.use("/recipes", authenticateToken, recipesRouter);
 

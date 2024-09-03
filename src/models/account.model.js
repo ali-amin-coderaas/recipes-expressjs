@@ -90,6 +90,7 @@ export const Account = {
 		const query = `
       SELECT accountType, COUNT(*) as count
       FROM accounts
+			WHERE isActive = true
       GROUP BY accountType
     `;
 		const [result] = await pool.query(query);
