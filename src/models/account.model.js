@@ -13,7 +13,7 @@ export const Account = {
 		if (pageSize < 1) pageSize = 5;
 
 		const offset = (page - 1) * pageSize;
-		
+
 		let query = `
 			SELECT 
 				a.*, 
@@ -84,5 +84,15 @@ export const Account = {
 		const query = "UPDATE accounts SET isActive = false WHERE id = ?";
 		const queryParams = [id];
 		return await pool.query(query, queryParams);
+	},
+
+	getByType: async () => {
+		const query = `
+      SELECT accountType, COUNT(*) as count
+      FROM accounts
+      GROUP BY accountType
+    `;
+		const [result] = await pool.query(query);
+		return result;
 	},
 };

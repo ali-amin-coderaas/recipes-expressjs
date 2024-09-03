@@ -1,6 +1,7 @@
 import {
 	addAccount,
 	deleteAccount,
+	getAccountsByType,
 	getAllAccounts,
 	getById,
 	updateAccount,
@@ -8,15 +9,21 @@ import {
 
 import { handleError, handleSuccess } from "../utils/responseHelper.js";
 
-const entityName = "Accounts";
-
 const createAccount = async (req, res) => {
 	const { name } = req.body;
 	try {
 		const newAccountId = await addAccount(name);
-		handleSuccess(res, 201, { id: newAccountId }, req, null, null, entityName);
+		handleSuccess(
+			res,
+			201,
+			{ id: newAccountId },
+			req,
+			null,
+			null,
+			"Create Account"
+		);
 	} catch (error) {
-		handleError(res, 500, error, req, entityName);
+		handleError(res, 500, error, req, "Create Account");
 	}
 };
 
@@ -44,9 +51,9 @@ const getAccounts = async (req, res) => {
 			totalPages,
 		};
 
-		handleSuccess(res, 200, { items }, req, pagination, null, entityName);
+		handleSuccess(res, 200, { items }, req, pagination, null, "Fetch Accounts");
 	} catch (error) {
-		handleError(res, 500, error, req, entityName);
+		handleError(res, 500, error, req, "Fetch Accounts");
 	}
 };
 
@@ -56,11 +63,11 @@ const getAccountById = async (req, res) => {
 		const account = await getById(id);
 
 		if (!account) {
-			handleError(res, 404, "Account not found", req, entityName);
+			handleError(res, 404, "Account not found", req, "Fetch Account");
 		}
-		handleSuccess(res, 200, account, req, null, null, entityName);
+		handleSuccess(res, 200, account, req, null, null, "Fetch Account");
 	} catch (error) {
-		handleError(res, 500, error, req, entityName);
+		handleError(res, 500, error, req, "Fetch Account");
 	}
 };
 
@@ -80,10 +87,10 @@ const updateAccountById = async (req, res) => {
 			req,
 			null,
 			null,
-			entityName
+			"Update Account"
 		);
 	} catch (error) {
-		handleError(res, 500, error, req, entityName);
+		handleError(res, 500, error, req, "Update Account");
 	}
 };
 
@@ -101,14 +108,23 @@ const deleteAccountById = async (req, res) => {
 			req,
 			null,
 			null,
-			entityName
+			"Delete Account"
 		);
 	} catch (error) {
-		handleError(res, 500, error, req, entityName);
+		handleError(res, 500, error, req, "Delete Account");
 	}
 };
 
+const fetchAccountsByType = async (req, res) => {
+	try {
+		const data = await getAccountsByType();
+		handleSuccess(res, 200, data, req, null, null, "Accounts By Type");
+	} catch (error) {
+		handleError(res, 500, error, req, "Accounts By Type");
+	}
+};
 export default {
+	fetchAccountsByType,
 	createAccount,
 	getAccountById,
 	getAccounts,

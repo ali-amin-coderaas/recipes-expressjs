@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.post("/", accountController.createAccount);
 router.get("/", accountController.getAccounts);
+router.get("/by-type", accountController.fetchAccountsByType);
 router.get("/:id", accountController.getAccountById);
 router.put("/:id", validateAccountData, accountController.updateAccountById);
 router.delete("/:id", accountController.deleteAccountById);

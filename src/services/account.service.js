@@ -7,7 +7,6 @@ export async function addAccount(name) {
 export async function updateAccount(id, fieldsToUpdate) {
 	return await Account.update(id, fieldsToUpdate);
 }
-
 export async function getAllAccounts(
 	page,
 	pageSize,
@@ -22,4 +21,13 @@ export async function getById(id) {
 }
 export async function deleteAccount(id) {
 	return await Account.delete(id);
+}
+
+export async function getAccountsByType() {
+	try {
+		const accountsByType = await Account.getByType();
+		return accountsByType;
+	} catch (error) {
+		throw new Error("Failed to fetch accounts by type");
+	}
 }
