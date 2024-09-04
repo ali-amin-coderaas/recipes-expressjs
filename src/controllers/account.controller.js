@@ -30,7 +30,7 @@ const createAccount = async (req, res) => {
 const getAccounts = async (req, res) => {
 	const searchQuery = req.query.q || "";
 	const page = Number(req.query.page) || 1;
-	const pageSize = Number(req.query.pageSize) || 0;
+	const pageSize = Number(req.query.pageSize) || 10;
 	const sortBy = req.query.sortBy || "";
 	const order = req.query.order || "";
 

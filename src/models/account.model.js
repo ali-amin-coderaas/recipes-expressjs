@@ -10,7 +10,7 @@ export const Account = {
 	},
 	getAll: async (page, pageSize, searchQuery, sortBy, order) => {
 		page = parseInt(page, 10) || 1;
-		if (pageSize < 1) pageSize = 5;
+		if (pageSize < 1) pageSize = 10;
 
 		const offset = (page - 1) * pageSize;
 

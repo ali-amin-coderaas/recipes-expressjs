@@ -9,7 +9,7 @@ export const Shop = {
 	},
 	getAll: async (accountId, page, pageSize, searchQuery, sortBy, order) => {
 		page = parseInt(page, 10) || 1;
-		if (pageSize < 1) pageSize = 5;
+		if (pageSize < 1) pageSize = 10;
 
 		const offset = (page - 1) * pageSize;
 
@@ -93,6 +93,26 @@ export const Shop = {
 		GROUP BY industry;
 `;
 		const [result] = await pool.query(query);
+		return result;
+	},
+
+	getStatsByDate: async (startDate, endDate) => {
+		const query = `
+		SELECT 
+			DATE(createdAt) as date, 
+			COUNT(*) as count 
+		FROM 
+			shops 
+		WHERE 
+			isActive = true 
+			AND createdAt BETWEEN ? AND ? 
+		GROUP BY 
+			DATE(createdAt) 
+		ORDER BY 
+			DATE(createdAt)
+	`;
+		const queryParams = [startDate, endDate];
+		const [result] = await pool.query(query, queryParams);
 		return result;
 	},
 };
