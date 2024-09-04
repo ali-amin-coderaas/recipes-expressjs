@@ -18,10 +18,13 @@ export const Shop = {
 		const countQuery = `
 		SELECT COUNT(*) AS totalItems 
 		FROM shops s 
-		WHERE s.isActive = true 
+		WHERE s.accountId = ?
+		AND s.isActive = true 
 		${searchQuery ? "AND s.name LIKE ?" : ""}
 	`;
-		const countParams = searchQuery ? [`%${searchQuery}%`] : [];
+		const countParams = searchQuery
+			? [accountId, `%${searchQuery}%`]
+			: [accountId];
 		const [[{ totalItems }]] = await pool.query(countQuery, countParams);
 
 		let query = `
