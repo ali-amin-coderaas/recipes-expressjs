@@ -1,8 +1,8 @@
 // services/shop.service.js
 import { Shop } from "../models/shop.model.js";
 
-export async function addShop(accountId, name, businessName, email) {
-	return await Shop.create(accountId, name, businessName, email);
+export async function addShop(accountId, name, businessName, email, industry) {
+	return await Shop.create(accountId, name, businessName, email, industry);
 }
 
 export async function updateShop(shopId, accountId, fieldsToUpdate) {
