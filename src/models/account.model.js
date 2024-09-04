@@ -75,7 +75,7 @@ export const Account = {
 		const setClause = Object.keys(fieldsToUpdate)
 			.map((key) => `${key} = ?`)
 			.join(", ");
-		const query = `UPDATE accounts SET ${setClause}, updatedAt = NOW() WHERE id = ?`;
+		const query = `UPDATE accounts SET ${setClause} WHERE id = ?`;
 		const queryParams = [...Object.values(fieldsToUpdate), id];
 		const [result] = await pool.query(query, queryParams);
 		return result;

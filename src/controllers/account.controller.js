@@ -76,19 +76,11 @@ const updateAccountById = async (req, res) => {
 	const fieldsToUpdate = req.body;
 
 	try {
-		const result = await updateAccount(id, fieldsToUpdate);
+		const result = await updateAccount(Number(id), fieldsToUpdate);
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ error: "Account not found" });
 		}
-		handleSuccess(
-			res,
-			200,
-			{ message: "Account updated successfully" },
-			req,
-			null,
-			null,
-			"Update Account"
-		);
+		handleSuccess(res, 200, req.body, req, null, null, "Update Account");
 	} catch (error) {
 		handleError(res, 500, error, req, "Update Account");
 	}
