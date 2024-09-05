@@ -70,7 +70,13 @@ const createShop = async (req, res) => {
 	const { name, businessName, email, industry } = req.body;
 
 	try {
-		const newShopId = await addShop(accountId, name, businessName, email, industry);
+		const newShopId = await addShop(
+			accountId,
+			name,
+			businessName,
+			email,
+			industry
+		);
 		handleSuccess(res, 201, { id: newShopId }, req, null, null, "Create shop");
 	} catch (error) {
 		handleError(res, 500, error, req, "Create shop");
@@ -79,7 +85,7 @@ const createShop = async (req, res) => {
 const getShop = async (req, res) => {
 	const { accountId, shopId } = req.params;
 	try {
-		const shop = await getById(shopId, accountId);
+		const shop = await getById(accountId, shopId);
 		if (!shop) {
 			handleError(res, 404, "Shop not found", req, "Fetch Shop");
 		}

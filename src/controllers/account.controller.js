@@ -16,7 +16,7 @@ const createAccount = async (req, res) => {
 		handleSuccess(
 			res,
 			201,
-			{ id: newAccountId },
+			{ accountId: newAccountId },
 			req,
 			null,
 			null,
@@ -58,9 +58,9 @@ const getAccounts = async (req, res) => {
 };
 
 const getAccountById = async (req, res) => {
-	const { id } = req.params;
+	const { accountId } = req.params;
 	try {
-		const account = await getById(id);
+		const account = await getById(accountId);
 
 		if (!account) {
 			handleError(res, 404, "Account not found", req, "Fetch Account");
@@ -72,11 +72,11 @@ const getAccountById = async (req, res) => {
 };
 
 const updateAccountById = async (req, res) => {
-	const { id } = req.params;
+	const { accountId } = req.params;
 	const fieldsToUpdate = req.body;
 
 	try {
-		const result = await updateAccount(Number(id), fieldsToUpdate);
+		const result = await updateAccount(Number(accountId), fieldsToUpdate);
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ error: "Account not found" });
 		}
@@ -87,9 +87,9 @@ const updateAccountById = async (req, res) => {
 };
 
 const deleteAccountById = async (req, res) => {
-	const { id } = req.params;
+	const { accountId } = req.params;
 	try {
-		const result = await deleteAccount(id);
+		const result = await deleteAccount(accountId);
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ error: "Account not found" });
 		}

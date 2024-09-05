@@ -65,24 +65,24 @@ export const Account = {
 		};
 	},
 
-	getById: async (id) => {
+	getById: async (accountId) => {
 		const query = "SELECT * FROM accounts WHERE id = ? AND isActive = true";
-		const queryParams = [id];
+		const queryParams = [accountId];
 		const [result] = await pool.query(query, queryParams);
 		return result[0];
 	},
-	update: async (id, fieldsToUpdate) => {
+	update: async (accountId, fieldsToUpdate) => {
 		const setClause = Object.keys(fieldsToUpdate)
 			.map((key) => `${key} = ?`)
 			.join(", ");
 		const query = `UPDATE accounts SET ${setClause} WHERE id = ?`;
-		const queryParams = [...Object.values(fieldsToUpdate), id];
+		const queryParams = [...Object.values(fieldsToUpdate), accountId];
 		const [result] = await pool.query(query, queryParams);
 		return result;
 	},
-	delete: async (id) => {
+	delete: async (accountId) => {
 		const query = "UPDATE accounts SET isActive = false WHERE id = ?";
-		const queryParams = [id];
+		const queryParams = [accountId];
 		return await pool.query(query, queryParams);
 	},
 

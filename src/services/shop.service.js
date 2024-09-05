@@ -27,12 +27,12 @@ export async function getAllShops(
 	);
 }
 
-export async function getById(shopId, accountId) {
-	return await Shop.getById(shopId, accountId);
+export async function getById(accountId, shopId) {
+	return await Shop.getById(accountId, shopId);
 }
 
-export async function deleteShop(shopId, accountId) {
-	return await Shop.delete(shopId, accountId);
+export async function deleteShop(accountId, shopId) {
+	return await Shop.delete(accountId, shopId);
 }
 
 export async function getShopsByIndustry() {

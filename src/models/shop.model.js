@@ -1,6 +1,6 @@
 import pool from "../configs/database.js";
 export const Shop = {
-	create: async (accountId, name, businessName, email,industry) => {
+	create: async (accountId, name, businessName, email, industry) => {
 		const query =
 			"INSERT INTO shops (accountId, name, businessName, email,industry, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, NOW(), NOW())";
 		const queryParams = [accountId, name, businessName, email, industry];
@@ -61,13 +61,13 @@ export const Shop = {
 		};
 	},
 
-	getById: async (shopId, accountId) => {
+	getById: async (accountId, shopId) => {
 		const query =
 			"SELECT * FROM shops WHERE id = ? AND accountId = ? AND isActive = true";
 		const [result] = await pool.query(query, [shopId, accountId]);
 		return result[0];
 	},
-	update: async (shopId, accountId, fieldsToUpdate) => {
+	update: async (accountId, shopId, fieldsToUpdate) => {
 		if (!fieldsToUpdate || Object.keys(fieldsToUpdate).length === 0) {
 			throw new Error("No fields to update");
 		}
@@ -79,7 +79,7 @@ export const Shop = {
 		const [result] = await pool.query(query, queryParams);
 		return result;
 	},
-	delete: async (shopId, accountId) => {
+	delete: async (accountId, shopId) => {
 		const query =
 			"UPDATE shops SET isActive = false WHERE id = ? AND accountId = ?";
 		const queryParams = [shopId, accountId];
