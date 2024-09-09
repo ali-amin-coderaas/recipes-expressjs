@@ -67,6 +67,7 @@ const getShops = async (req, res) => {
 
 const createShop = async (req, res) => {
 	const { accountId } = req.params;
+
 	const { name, businessName, email, industry } = req.body;
 
 	try {
@@ -77,7 +78,15 @@ const createShop = async (req, res) => {
 			email,
 			industry
 		);
-		handleSuccess(res, 201, { id: newShopId }, req, null, null, "Create shop");
+		handleSuccess(
+			res,
+			201,
+			{ shopId: newShopId },
+			req,
+			null,
+			null,
+			"Create shop"
+		);
 	} catch (error) {
 		handleError(res, 500, error, req, "Create shop");
 	}

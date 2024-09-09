@@ -26,7 +26,7 @@ app.use("/accounts", authenticateToken, accountRouter);
 
 app.use("/accounts", authenticateToken, shopRouter);
 
-app.use("/stats", authenticateToken, statsRouter);
+app.use("/analytics", authenticateToken, statsRouter);
 
 app.use("/recipes", authenticateToken, recipesRouter);
 

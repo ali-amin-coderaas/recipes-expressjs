@@ -59,11 +59,18 @@ const getAccounts = async (req, res) => {
 
 const getAccountById = async (req, res) => {
 	const { accountId } = req.params;
+
 	try {
 		const account = await getById(accountId);
 
 		if (!account) {
-			handleError(res, 404, "Account not found", req, "Fetch Account");
+			handleError(
+				res,
+				404,
+				{ message: "Account not found" },
+				req,
+				"Fetch Account"
+			);
 		}
 		handleSuccess(res, 200, account, req, null, null, "Fetch Account");
 	} catch (error) {
