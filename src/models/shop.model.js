@@ -31,7 +31,7 @@ export const Shop = {
         SELECT s.* 
         FROM shops s 
         WHERE s.accountId = ? 
-				AND isActive = true
+				AND s.isActive = true
     `;
 
 		let queryParams = [accountId];
