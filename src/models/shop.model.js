@@ -2,7 +2,7 @@ import pool from "../configs/database.js";
 export const Shop = {
 	create: async (accountId, name, businessName, email, industry) => {
 		const query =
-			"INSERT INTO shops (accountId, name, businessName, email,industry, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, NOW(), NOW())";
+			"INSERT INTO shops (accountId, name, businessName, email,industry, createdAt) VALUES (?, ?, ?, ?, ?, NOW())";
 		const queryParams = [accountId, name, businessName, email, industry];
 		const [result] = await pool.query(query, queryParams);
 		return result.insertId;
