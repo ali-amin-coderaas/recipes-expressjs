@@ -11,6 +11,6 @@ router.put(
 	validateAccountData,
 	accountController.updateAccountById
 );
-router.delete("/:accountId", accountController.deleteAccountById);
+router.patch("/:accountId", accountController.deleteAccountById);
 
 export default router;

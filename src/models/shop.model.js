@@ -74,17 +74,26 @@ export const Shop = {
 		const setClause = Object.keys(fieldsToUpdate)
 			.map((key) => `${key} = ?`)
 			.join(", ");
-		const query = `UPDATE shops SET ${setClause}, updatedAt = NOW() WHERE id = ? AND accountId = ?`;
+		const query = `UPDATE shops SET ${setClause} WHERE id = ? AND accountId = ?`;
 		const queryParams = [...Object.values(fieldsToUpdate), shopId, accountId];
 		const [result] = await pool.query(query, queryParams);
 		return result;
 	},
 	delete: async (accountId, shopId) => {
-		const query =
-			"UPDATE shops SET isActive = false WHERE id = ? AND accountId = ?";
-		const queryParams = [shopId, accountId];
-		return await pool.query(query, queryParams);
+		try {
+			const query =
+				"UPDATE shops SET isActive = false WHERE accountId = ? AND id = ?";
+			const queryParams = [shopId, accountId];
+
+			const result = await pool.query(query, queryParams);
+
+			return result; // or return something more meaningful if needed
+		} catch (error) {
+			console.error("Error updating shop:", error);
+			throw error; // propagate the error
+		}
 	},
+
 	getByIndustry: async () => {
 		const query = `
 		SELECT industry, COUNT(*) as count
