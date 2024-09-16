@@ -19,11 +19,12 @@ const login = async (req, res) => {
 			return res.status(401).json({ error: "Invalid email or password" });
 		}
 
-		const isValidPassword = validatePassword(password, user.password);
+		const isValidPassword = await validatePassword(password, user.password);
 
 		if (!isValidPassword) {
 			return res.status(401).json({ error: "Invalid email or password" });
 		}
+
 		const token = jwt.sign(
 			{ id: user.id, email: user.email },
 			process.env.JWT_SECRET,

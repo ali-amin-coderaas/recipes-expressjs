@@ -1,7 +1,18 @@
 import dotenv from "dotenv";
 import mysql from "mysql2/promise";
+import { Sequelize } from "sequelize";
 
 dotenv.config();
+
+const sequelize = new Sequelize(
+	process.env.MYSQL_DATABASE,
+	process.env.MYSQL_USER,
+	process.env.MYSQL_PASSWORD,
+	{
+		host: process.env.MYSQL_HOST,
+		dialect: "mysql",
+	}
+);
 
 const pool = mysql.createPool({
 	host: process.env.MYSQL_HOST,

@@ -11,6 +11,6 @@ router.put(
 	validateShopData,
 	shopController.updateShopById
 );
-router.patch("/:accountId/shops/:shopId", shopController.deleteShopById);
+router.delete("/:accountId/shops/:shopId", shopController.deleteShopById);
 
 export default router;

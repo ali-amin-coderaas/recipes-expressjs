@@ -89,8 +89,10 @@ export const Shop = {
 
 			return result; // or return something more meaningful if needed
 		} catch (error) {
-			console.error("Error updating shop:", error);
-			throw error; // propagate the error
+			console.error(
+				`Error deleting shop with id ${shopId} and accountId ${accountId}`,
+				error
+			);
 		}
 	},
 

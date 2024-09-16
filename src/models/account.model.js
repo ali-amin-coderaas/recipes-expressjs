@@ -2,8 +2,7 @@ import pool from "../configs/database.js";
 
 export const Account = {
 	create: async (name) => {
-		const query =
-			"INSERT INTO accounts (name, createdAt) VALUES (?, NOW())";
+		const query = "INSERT INTO accounts (name, createdAt) VALUES (?, NOW())";
 		const queryParams = [name];
 		const [result] = await pool.query(query, queryParams);
 		return result.insertId;
@@ -83,7 +82,13 @@ export const Account = {
 	delete: async (accountId) => {
 		const query = "UPDATE accounts SET isActive = false WHERE id = ?";
 		const queryParams = [accountId];
-		return await pool.query(query, queryParams);
+
+		try {
+			const result = await pool.query(query, queryParams);
+			return result;
+		} catch (error) {
+			console.error(`Error deleting account with id ${accountId}`, error);
+		}
 	},
 
 	getByType: async () => {

@@ -13,7 +13,7 @@ const createAccount = async (req, res) => {
 	const { name } = req.body;
 	try {
 		const newAccountId = await addAccount(name);
-		handleSuccess(
+		return handleSuccess(
 			res,
 			201,
 			{ accountId: newAccountId },
@@ -23,7 +23,7 @@ const createAccount = async (req, res) => {
 			"Create Account"
 		);
 	} catch (error) {
-		handleError(res, 500, error, req, "Create Account");
+		return handleError(res, 500, error, req, "Create Account");
 	}
 };
 
@@ -51,9 +51,17 @@ const getAccounts = async (req, res) => {
 			totalPages,
 		};
 
-		handleSuccess(res, 200, { items }, req, pagination, null, "Fetch Accounts");
+		return handleSuccess(
+			res,
+			200,
+			{ items },
+			req,
+			pagination,
+			null,
+			"Fetch Accounts"
+		);
 	} catch (error) {
-		handleError(res, 500, error, req, "Fetch Accounts");
+		return handleError(res, 500, error, req, "Fetch Accounts");
 	}
 };
 
@@ -64,7 +72,7 @@ const getAccountById = async (req, res) => {
 		const account = await getById(accountId);
 
 		if (!account) {
-			handleError(
+			return handleError(
 				res,
 				404,
 				{ message: "Account not found" },
@@ -72,9 +80,9 @@ const getAccountById = async (req, res) => {
 				"Fetch Account"
 			);
 		}
-		handleSuccess(res, 200, account, req, null, null, "Fetch Account");
+		return handleSuccess(res, 200, account, req, null, null, "Fetch Account");
 	} catch (error) {
-		handleError(res, 500, error, req, "Fetch Account");
+		return handleError(res, 500, error, req, "Fetch Account");
 	}
 };
 
@@ -87,9 +95,9 @@ const updateAccountById = async (req, res) => {
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ error: "Account not found" });
 		}
-		handleSuccess(res, 200, req.body, req, null, null, "Update Account");
+		return handleSuccess(res, 200, req.body, req, null, null, "Update Account");
 	} catch (error) {
-		handleError(res, 500, error, req, "Update Account");
+		return handleError(res, 500, error, req, "Update Account");
 	}
 };
 
@@ -98,9 +106,9 @@ const deleteAccountById = async (req, res) => {
 	try {
 		const result = await deleteAccount(accountId);
 		if (result.affectedRows === 0) {
-			return res.status(404).json({ error: "Account not found" });
+			return handleError(res, 404, "Account not found", req, "Delete Account");
 		}
-		handleSuccess(
+		return handleSuccess(
 			res,
 			200,
 			{ message: "Account deleted successfully" },
@@ -110,16 +118,16 @@ const deleteAccountById = async (req, res) => {
 			"Delete Account"
 		);
 	} catch (error) {
-		handleError(res, 500, error, req, "Delete Account");
+		return handleError(res, 500, error, req, "Delete Account");
 	}
 };
 
 const fetchAccountsByType = async (req, res) => {
 	try {
 		const data = await getAccountsByType();
-		handleSuccess(res, 200, data, req, null, null, "Accounts By Type");
+		return handleSuccess(res, 200, data, req, null, null, "Accounts By Type");
 	} catch (error) {
-		handleError(res, 500, error, req, "Accounts By Type");
+		return handleError(res, 500, error, req, "Accounts By Type");
 	}
 };
 export default {
