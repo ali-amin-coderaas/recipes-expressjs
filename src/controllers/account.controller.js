@@ -1,18 +1,10 @@
-import {
-	addAccount,
-	deleteAccount,
-	getAccountsByType,
-	getAllAccounts,
-	getById,
-	updateAccount,
-} from "../services/account.service.js";
-
 import { handleError, handleSuccess } from "../utils/responseHelper.js";
+import AccountService from "./../services/account.service";
 
 const createAccount = async (req, res) => {
-	const { name } = req.body;
+	const { name, type } = req.body;
 	try {
-		const newAccountId = await addAccount(name);
+		const newAccountId = await AccountService.createAccount({ name, type });
 		return handleSuccess(
 			res,
 			201,
@@ -35,7 +27,7 @@ const getAccounts = async (req, res) => {
 	const order = req.query.order || "";
 
 	try {
-		const data = await getAllAccounts(
+		const data = await AccountService.getAllAccounts(
 			page,
 			pageSize,
 			searchQuery,

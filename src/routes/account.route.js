@@ -1,16 +1,32 @@
 import express from "express";
 import accountController from "../controllers/account.controller.js";
-import validateAccountData from "../middlewares/account.middleware.js";
+import accountValidator from "../middlewares/account.middleware.js";
 const router = express.Router();
 
-router.post("/", accountController.createAccount);
-router.get("/", accountController.getAccounts);
-router.get("/:accountId", accountController.getAccountById);
+router.get(
+	"/",
+	accountValidator.validateAccountQuery,
+	accountController.getAccounts
+);
+router.get(
+	"/:accountId",
+	accountValidator.validateAccountId,
+	accountController.getAccountById
+);
+router.post(
+	"/",
+	accountValidator.validateCreateAccount,
+	accountController.createAccount
+);
 router.put(
 	"/:accountId",
-	validateAccountData,
+	accountValidator.validateUpdateAccount,
 	accountController.updateAccountById
 );
-router.delete("/:accountId", accountController.deleteAccountById);
+router.delete(
+	"/:accountId",
+	accountValidator.validateDeleteAccount,
+	accountController.deleteAccountById
+);
 
 export default router;

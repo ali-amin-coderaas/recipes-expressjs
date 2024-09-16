@@ -4,7 +4,7 @@ import { Sequelize } from "sequelize";
 
 dotenv.config();
 
-const sequelize = new Sequelize(
+export const sequelize = new Sequelize(
 	process.env.MYSQL_DATABASE,
 	process.env.MYSQL_USER,
 	process.env.MYSQL_PASSWORD,
@@ -14,7 +14,7 @@ const sequelize = new Sequelize(
 	}
 );
 
-const pool = mysql.createPool({
+export const pool = mysql.createPool({
 	host: process.env.MYSQL_HOST,
 	user: process.env.MYSQL_USER,
 	password: process.env.MYSQL_PASSWORD,
@@ -24,5 +24,3 @@ const pool = mysql.createPool({
 	connectionLimit: 10,
 	queueLimit: 0,
 });
-
-export default pool;

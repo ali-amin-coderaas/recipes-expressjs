@@ -1,28 +1,37 @@
-import { Account } from "../models/account.model.js";
+import Account from "../models/account.model.js";
 
-export async function addAccount(name) {
-	return await Account.create(name);
-}
+const AccountService = {
+	async getAllAccounts(page, pageSize, searchQuery, sortBy, order) {
+		return await Account.findAll({
+			where: {
+				isActive: true,
+				name: {
+					[Op.like]: `%${searchQuery}%`,
+				},
+			},
+			order: [[sortBy, order]],
+			limit: pageSize,
+			offset: (page - 1) * pageSize,
+		});
+	},
 
-export async function updateAccount(accountId, fieldsToUpdate) {
-	return await Account.update(accountId, fieldsToUpdate);
-}
-export async function getAllAccounts(
-	page,
-	pageSize,
-	searchQuery,
-	sortBy,
-	order
-) {
-	return await Account.getAll(page, pageSize, searchQuery, sortBy, order);
-}
-export async function getById(accountId) {
-	return await Account.getById(accountId);
-}
-export async function deleteAccount(accountId) {
-	return await Account.delete(accountId);
-}
+	async getAccountById(id) {
+		return await Account.findByPk(id, {
+			where: { isActive: true },
+		});
+	},
 
-export async function getAccountsByType() {
-	return await Account.getByType();
-}
+	async createAccount(data) {
+		return await Account.create(data);
+	},
+
+	async updateAccount(id, data) {
+		return await Account.update(data, { where: { id } });
+	},
+
+	async deleteAccount(id) {
+		return await Account.update({ isActive: false }, { where: { id } });
+	},
+};
+
+export default AccountService;

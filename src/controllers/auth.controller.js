@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import { findUserByEmail, validatePassword } from "../services/user.service.js";
+import { findUserByEmail } from "../services/user.service.js";
+import validatePassword from "../utils/validatePassword.js";
 
 dotenv.config();
 
