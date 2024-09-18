@@ -38,6 +38,31 @@ function handleSuccess(
 	});
 }
 
-function handleError(res, statusCode, error, req, entityName) {}
+function handleError(res, statusCode, error, req, entityName) {
+	const startTime = req.startTime || Date.now();
+	const executionTime = `${Date.now() - startTime}ms`;
+
+	res.status(statusCode).json({
+		status: {
+			code: statusCode,
+			message: res.statusMessage || "An error occurred",
+			timestamp: new Date().toISOString(),
+			path: req.originalUrl,
+			method: req.method,
+			requestId: requestId || null,
+		},
+		data: null,
+		error: {
+			message: error.message || error,
+			details: error.details || null,
+		},
+		meta: {
+			version: "1.0.0",
+			api: `${entityName} API`,
+			environment: process.env.NODE_ENV || "development",
+			executionTime: executionTime,
+		},
+	});
+}
 
 export { handleError, handleSuccess };

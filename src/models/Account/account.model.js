@@ -15,30 +15,14 @@ const Account = sequelize.define(
 			allowNull: false,
 		},
 		typeId: {
-			type: DataTypes.STRING,
+			type: DataTypes.INTEGER,
 			allowNull: false,
-			defaultValue: "Personal",
-			references: {
-				model: "Type",
-				key: "id",
-			},
-		},
-		isActive: {
-			type: DataTypes.BOOLEAN,
-			defaultValue: true,
-		},
-		createdAt: {
-			type: DataTypes.DATE,
-			defaultValue: DataTypes.NOW,
-		},
-		updatedAt: {
-			type: DataTypes.DATE,
-			defaultValue: DataTypes.NOW,
+			defaultValue: 1,
 		},
 	},
 	{
-		tableName: "accounts",
-		timestamps: true, // Automatically add createdAt and updatedAt fields
+		timestamps: true,
+		paranoid: true,
 	}
 );
 

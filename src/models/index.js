@@ -8,13 +8,13 @@ import User from "./User/user.model.js";
 Account.hasMany(Shop, { foreignKey: "accountId" });
 Shop.belongsTo(Account, { foreignKey: "accountId" });
 
-Shop.hasOne(Industry, { foreignKey: "industryId" });
-Industry.belongsTo(Shop, { foreignKey: "industryId" });
+Shop.belongsTo(Industry, { foreignKey: "industryId" });
+Industry.hasMany(Shop, { foreignKey: "industryId" });
 
-Account.hasOne(Type, { foreignKey: "typeId" });
-Type.belongsTo(Account, { foreignKey: "typeId" });
+Account.belongsTo(Type, { foreignKey: "typeId" });
+Type.hasMany(Account, { foreignKey: "typeId" });
 
-User.hasOne(Permission, { foreignKey: "permissionId" });
-Permission.belongsTo(User, { foreignKey: "permissionId" });
+User.belongsTo(Permission, { foreignKey: "permissionId" });
+Permission.hasMany(User, { foreignKey: "permissionId" });
 
 export { Account, Industry, Permission, Shop, Type, User };

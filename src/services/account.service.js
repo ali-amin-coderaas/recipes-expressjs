@@ -1,10 +1,13 @@
-import Account from "../models/account.model.js";
+import { Op } from "sequelize";
+import { sequelize } from "../configs/database.js";
+import { Account } from "../models/index.js";
 
 const AccountService = {
 	async getAllAccounts(page, pageSize, searchQuery, sortBy, order) {
-		return await Account.findAll({
+		console.log(" get all started services");
+
+		return await Account.findAndCountAll({
 			where: {
-				isActive: true,
 				name: {
 					[Op.like]: `%${searchQuery}%`,
 				},
@@ -16,9 +19,7 @@ const AccountService = {
 	},
 
 	async getAccountById(id) {
-		return await Account.findByPk(id, {
-			where: { isActive: true },
-		});
+		return await Account.findByPk(id);
 	},
 
 	async createAccount(data) {
@@ -26,11 +27,11 @@ const AccountService = {
 	},
 
 	async updateAccount(id, data) {
-		return await Account.update(data, { where: { id } });
+		return await Account.update(data, { where: { id: id } });
 	},
 
 	async deleteAccount(id) {
-		return await Account.update({ isActive: false }, { where: { id } });
+		return await Account.destroy({ where: { id: id } });
 	},
 };
 

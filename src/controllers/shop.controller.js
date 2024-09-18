@@ -1,34 +1,20 @@
-import {
-	addShop,
-	deleteShop,
-	getAllShops,
-	getById,
-	getShopsByIndustry,
-	updateShop,
-} from "../services/shop.service.js";
+import ShopService from "../services/shop.service.js";
 import { handleError, handleSuccess } from "../utils/responseHelper.js";
 
 const getShops = async (req, res) => {
 	let { accountId } = req.params;
-	let {
-		page = 1,
-		pageSize = 5,
-		q: searchQuery,
-		sortBy = "createdAt",
-		order = "DESC",
-	} = req.query;
-
-	// Ensure valid integers for page and pageSize
-	const currPage = parseInt(page, 10);
-	const size = parseInt(pageSize, 10);
-	const accId = parseInt(accountId, 10);
+	const searchQuery = req.query.q || "";
+	const page = Number(req.query.page) || 1;
+	const pageSize = Number(req.query.pageSize) || 10;
+	const sortBy = req.query.sortBy || "";
+	const order = req.query.order || "";
 
 	try {
 		// Call the getAllShops function with the necessary parameters
-		const data = await getAllShops(
-			accId,
-			currPage,
-			size,
+		const data = await ShopService.getAllShops(
+			accountId,
+			page,
+			pageSize,
 			searchQuery,
 			sortBy,
 			order
@@ -37,24 +23,9 @@ const getShops = async (req, res) => {
 		const { items, totalItems, currentPage, totalPages } = data;
 		const pagination = {
 			currentPage,
-			pageSize: size,
+			pageSize: data.pageSize,
 			totalItems,
 			totalPages,
-		};
-		const links = {
-			self: `${req.baseUrl}${req.path}?page=${currentPage}&pageSize=${pageSize}`,
-			next:
-				currentPage < totalPages
-					? `${req.baseUrl}${req.path}?page=${
-							currentPage + 1
-					  }&pageSize=${pageSize}`
-					: null,
-			previous:
-				currentPage > 1
-					? `${req.baseUrl}${req.path}?page=${
-							currentPage - 1
-					  }&pageSize=${pageSize}`
-					: null,
 		};
 
 		// Send a successful response with the data, pagination, and links
@@ -64,7 +35,7 @@ const getShops = async (req, res) => {
 			{ items },
 			req,
 			pagination,
-			links,
+			null,
 			"Fetch shops"
 		);
 	} catch (error) {
@@ -79,7 +50,7 @@ const createShop = async (req, res) => {
 	const { name, businessName, email, industry } = req.body;
 
 	try {
-		const newShopId = await addShop(
+		const newShopId = await ShopService.createShop(
 			accountId,
 			name,
 			businessName,

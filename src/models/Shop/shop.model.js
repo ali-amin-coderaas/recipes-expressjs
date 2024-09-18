@@ -13,10 +13,6 @@ const Shop = sequelize.define(
 		accountId: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			references: {
-				model: "Account",
-				key: "id",
-			},
 		},
 		name: {
 			type: DataTypes.STRING,
@@ -33,27 +29,11 @@ const Shop = sequelize.define(
 		industryId: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			references: {
-				model: "Industry",
-				key: "id",
-			},
-		},
-		isActive: {
-			type: DataTypes.BOOLEAN,
-			defaultValue: true,
-		},
-		createdAt: {
-			type: DataTypes.DATE,
-			defaultValue: DataTypes.NOW,
-		},
-		updatedAt: {
-			type: DataTypes.DATE,
-			defaultValue: DataTypes.NOW,
 		},
 	},
 	{
-		tableName: "shops",
-		timestamps: true, 
+		timestamps: true,
+		paranoid: true,
 	}
 );
 

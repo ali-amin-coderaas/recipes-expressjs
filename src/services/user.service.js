@@ -1,7 +1,12 @@
-import User from "../models/user.model.js";
+import User from "../models/User/user.model.js";
 
-export async function registerUser({ first_name, last_name, email, password }) {
-	return await User.create({ first_name, last_name, email, password });
+export async function registerUser(first_name, last_name, email, password) {
+	return await User.create({
+		first_name,
+		last_name,
+		email,
+		password,
+	});
 }
 
 export async function findUserByEmail(email) {

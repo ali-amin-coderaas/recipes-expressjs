@@ -1,30 +1,12 @@
 import { handleError, handleSuccess } from "../utils/responseHelper.js";
-import AccountService from "./../services/account.service";
+import AccountService from "./../services/account.service.js";
 
-const createAccount = async (req, res) => {
-	const { name, type } = req.body;
-	try {
-		const newAccountId = await AccountService.createAccount({ name, type });
-		return handleSuccess(
-			res,
-			201,
-			{ accountId: newAccountId },
-			req,
-			null,
-			null,
-			"Create Account"
-		);
-	} catch (error) {
-		return handleError(res, 500, error, req, "Create Account");
-	}
-};
-
-const getAccounts = async (req, res) => {
+const getAll = async (req, res) => {
 	const searchQuery = req.query.q || "";
 	const page = Number(req.query.page) || 1;
 	const pageSize = Number(req.query.pageSize) || 10;
-	const sortBy = req.query.sortBy || "";
-	const order = req.query.order || "";
+	const sortBy = req.query.sortBy || "createdAt";
+	const order = req.query.order || "ASC";
 
 	try {
 		const data = await AccountService.getAllAccounts(
@@ -57,11 +39,11 @@ const getAccounts = async (req, res) => {
 	}
 };
 
-const getAccountById = async (req, res) => {
+const getById = async (req, res) => {
 	const { accountId } = req.params;
 
 	try {
-		const account = await getById(accountId);
+		const account = await AccountService.getAccountById(accountId);
 
 		if (!account) {
 			return handleError(
@@ -77,13 +59,33 @@ const getAccountById = async (req, res) => {
 		return handleError(res, 500, error, req, "Fetch Account");
 	}
 };
+const create = async (req, res) => {
+	const { name, type } = req.body;
+	try {
+		const newAccountId = await AccountService.createAccount({ name, type });
+		return handleSuccess(
+			res,
+			201,
+			{ accountId: newAccountId },
+			req,
+			null,
+			null,
+			"Create Account"
+		);
+	} catch (error) {
+		return handleError(res, 500, error, req, "Create Account");
+	}
+};
 
-const updateAccountById = async (req, res) => {
+const update = async (req, res) => {
 	const { accountId } = req.params;
 	const fieldsToUpdate = req.body;
 
 	try {
-		const result = await updateAccount(Number(accountId), fieldsToUpdate);
+		const result = await AccountService.updateAccount(
+			Number(accountId),
+			fieldsToUpdate
+		);
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ error: "Account not found" });
 		}
@@ -93,10 +95,10 @@ const updateAccountById = async (req, res) => {
 	}
 };
 
-const deleteAccountById = async (req, res) => {
+const destroy = async (req, res) => {
 	const { accountId } = req.params;
 	try {
-		const result = await deleteAccount(accountId);
+		const result = await AccountService.deleteAccount(accountId);
 		if (result.affectedRows === 0) {
 			return handleError(res, 404, "Account not found", req, "Delete Account");
 		}
@@ -124,9 +126,9 @@ const fetchAccountsByType = async (req, res) => {
 };
 export default {
 	fetchAccountsByType,
-	createAccount,
-	getAccountById,
-	getAccounts,
-	deleteAccountById,
-	updateAccountById,
+	create,
+	getAll,
+	getById,
+	update,
+	destroy,
 };
