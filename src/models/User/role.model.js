@@ -1,32 +1,20 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../../configs/database.js";
 
-const User = sequelize.define(
-	"User",
+const Role = sequelize.define(
+	"Role",
 	{
 		id: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
-			allowNull: false,
 		},
-		username: {
+		name: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		email: {
+		description: {
 			type: DataTypes.STRING,
-			allowNull: false,
-			unique: true,
-		},
-		password: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		},
-		roleId: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			defaultValue: 1,
 		},
 	},
 	{
@@ -35,4 +23,4 @@ const User = sequelize.define(
 	}
 );
 
-export default User;
+export default Role;

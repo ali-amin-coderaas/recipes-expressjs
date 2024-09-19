@@ -2,12 +2,11 @@ import bcrypt from "bcrypt";
 import { findUserByEmail, registerUser } from "../services/user.service.js";
 
 const register = async (req, res) => {
-	const first_name = req.body.first_name;
-	const last_name = req.body.last_name;
+	const username = req.body.username;
 	const email = req.body.email;
 	const password = req.body.password;
 
-	if (!first_name || !last_name || !email || !password) {
+	if (!username || !email || !password) {
 		return res.status(400).json({ error: "All fields are required" });
 	}
 
@@ -21,8 +20,7 @@ const register = async (req, res) => {
 
 		try {
 			const userId = await registerUser({
-				first_name,
-				last_name,
+				username,
 				email,
 				password: hash,
 			});

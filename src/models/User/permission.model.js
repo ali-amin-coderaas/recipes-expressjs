@@ -14,6 +14,10 @@ const Permission = sequelize.define(
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
+		action: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
 		description: {
 			type: DataTypes.STRING,
 		},
